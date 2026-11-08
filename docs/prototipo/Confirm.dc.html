@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>¡Tu carta llegó al Polo Norte!</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&amp;family=Nunito:wght@400;600;700;800&amp;family=Patrick+Hand&amp;family=Pinyon+Script&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#E2C27A}a:hover{color:#F3D58A}
+@keyframes cf-snow{from{background-position:0 0,11px 17px}to{background-position:0 420px,11px 287px}}
+@keyframes cf-fly{0%{transform:translate(-160px,120px) rotate(-25deg) scale(0.6);opacity:0}60%{opacity:1}100%{transform:translate(0,0) rotate(0) scale(1);opacity:1}}
+@keyframes cf-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes cf-dash{to{stroke-dashoffset:-36}}
+@keyframes cf-twinkle{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.25;transform:scale(0.6)}}
+@keyframes cf-up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cf-pulse{0%{box-shadow:0 0 0 0 rgba(201,162,74,0.7)}100%{box-shadow:0 0 0 10px rgba(201,162,74,0)}}
+@keyframes cf-check{from{transform:scale(0)}70%{transform:scale(1.2)}to{transform:scale(1)}}
+.cf-snow{animation:cf-snow 16s linear infinite}
+.cf-fly{animation:cf-fly 1.4s cubic-bezier(.2,.8,.2,1) both}
+.cf-bob{animation:cf-bob 4s ease-in-out 1.4s infinite}
+.cf-dash{animation:cf-dash 1.2s linear infinite}
+.cf-tw{transform-box:fill-box;transform-origin:center;animation:cf-twinkle 2.2s ease-in-out infinite}
+.cf-tw2{animation-delay:1.1s}
+.cf-up{animation:cf-up .7s ease-out both}
+.cf-d1{animation-delay:.9s}.cf-d2{animation-delay:1.2s}.cf-d3{animation-delay:1.5s}
+.cf-pulse{animation:cf-pulse 1.6s ease-out infinite}
+.cf-check{animation:cf-check .5s ease-out 1.8s both}
+@media (prefers-reduced-motion: reduce){.cf-snow,.cf-fly,.cf-bob,.cf-dash,.cf-tw,.cf-up,.cf-pulse,.cf-check{animation:none}}
+</style>
+</helmet>
+<div class="cf-snow" style="width: 390px; height: 844px; box-sizing: border-box; overflow: hidden; position: relative; font-family: 'Nunito', system-ui, sans-serif; color: #FBF7EF; background-color: #0F3324; background-image: radial-gradient(#FFFFFF 1.2px, transparent 1.6px), radial-gradient(rgba(255,255,255,0.5) 1px, transparent 1.4px); background-size: 42px 42px, 27px 27px; background-position: 0 0, 11px 17px; display: flex; flex-direction: column; padding: 56px 26px 28px; gap: 22px">
+
+<div style="align-self: center; position: relative; width: 150px; height: 120px">
+<svg style="position: absolute; inset: 0" viewBox="0 0 150 120" width="150" height="120" aria-hidden="true">
+<path class="cf-dash" d="M10 70 q30 -50 70 -40" fill="none" stroke="rgba(226,194,122,0.7)" stroke-width="2" stroke-dasharray="3 6"/>
+<path class="cf-tw" d="M20 30l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#E2C27A"/>
+<path class="cf-tw cf-tw2" d="M130 88l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#E2C27A"/>
+</svg>
+<div class="cf-fly" style="position: absolute; left: 0; top: 0; width: 150px; height: 120px">
+<div class="cf-bob" style="width: 150px; height: 120px">
+<svg viewBox="0 0 150 120" width="150" height="120" aria-hidden="true">
+<g transform="translate(62 18) rotate(-10)"><rect x="0" y="0" width="76" height="50" rx="5" fill="#FBF7EF"/><path d="M0 4 L38 30 L76 4" fill="none" stroke="#B3261E" stroke-width="3"/><circle cx="38" cy="30" r="8" fill="#C9A24A"/><path d="M34 30l3 3 6-6" fill="none" stroke="#0F3324" stroke-width="2.2" stroke-linecap="round"/></g>
+</svg>
+</div>
+</div>
+</div>
+
+<div class="cf-up cf-d1" style="text-align: center">
+<h1 style="margin: 0; font-family: 'Fraunces', serif; font-weight: 700; font-size: 32px; line-height: 1.1">¡Ho, ho, ho!<br>¡Tu carta llegó al Polo Norte!</h1>
+<p style="margin: 14px 0 0; font-size: 17px; line-height: 1.55; color: #E9E2D0">Los duendes ya están preparando todo para que Santa pueda leer tu carta. Muy pronto recibirás una sorpresa especial directamente en tu hogar.</p>
+<p style="margin: 12px 0 0; font-family: 'Patrick Hand', cursive; font-size: 24px; color: #E2C27A">¡Sigue soñando en grande!</p>
+</div>
+
+<div class="cf-up cf-d2" style="background: #FBF7EF; color: #1F2A24; border-radius: 18px; padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<p style="margin: 0; font-size: 12px; font-weight: 800; color: #5A645F; text-transform: uppercase; letter-spacing: 0.08em">Orden</p>
+<p style="margin: 0; font-weight: 800; font-size: 15px; color: #0F3324">#[NÚMERO]</p>
+</div>
+<ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px">
+<li style="display: flex; gap: 12px; align-items: center; font-size: 15px; font-weight: 800; color: #0F3324">
+<span class="cf-check" style="width: 26px; height: 26px; border-radius: 999px; background: #1F6B47; display: inline-flex; align-items: center; justify-content: center; flex: none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4.5 4.5L19 7"/></svg></span>Pedido recibido y pagado</li>
+<li style="display: flex; gap: 12px; align-items: center; font-size: 15px; font-weight: 700; color: #4B5550">
+<span class="cf-pulse" style="width: 26px; height: 26px; border-radius: 999px; border: 2px solid #C9A24A; box-sizing: border-box; flex: none"></span>Los duendes preparan la respuesta</li>
+<li style="display: flex; gap: 12px; align-items: center; font-size: 15px; font-weight: 700; color: #4B5550">
+<span style="width: 26px; height: 26px; border-radius: 999px; border: 2px solid #D9CDB2; box-sizing: border-box; flex: none"></span>Sale del Polo Norte por correo</li>
+</ol>
+<p style="margin: 2px 0 0; font-size: 13px; line-height: 1.5; color: #5A645F">Enviamos la confirmación a [correo del adulto]. Te avisaremos cuando la carta salga.</p>
+</div>
+
+<a class="cf-up cf-d3" href="Main.dc.html" style="margin-top: auto; align-self: center; font-weight: 800; font-size: 16px; min-height: 44px; display: inline-flex; align-items: center">Volver al inicio</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Envío y pago</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&amp;family=Nunito:wght@400;600;700;800&amp;family=Patrick+Hand&amp;family=Pinyon+Script&amp;display=swap">
+<style>
+body{margin:0;background:#F6F2E9}
+a{color:#B3261E}a:hover{color:#8E1D17}
+input,select,button{font-family:inherit}
+.pay:hover{background:#9C2019 !important}
+</style>
+</helmet>
+<div style="width: 100%; font-family: 'Nunito', system-ui, sans-serif; color: #1F2A24; background: #F6F2E9">
+<header style="background: #0F3324; color: #FBF7EF">
+<div style="max-width: 1160px; margin: 0 auto; padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; color: #FBF7EF; text-decoration: none; min-height: 44px">
+<svg width="30" height="30" viewBox="0 0 34 34" aria-hidden="true"><rect x="3" y="8" width="28" height="19" rx="3" fill="#FBF7EF"/><path d="M3 10 L17 20 L31 10" fill="none" stroke="#B3261E" stroke-width="2.4"/><circle cx="17" cy="20" r="4" fill="#C9A24A"/></svg>
+<span style="font-family: 'Fraunces', serif; font-weight: 700; font-size: 20px">CartaParaSanta<span style="color: #E2C27A">.com</span></span>
+</a>
+<p style="margin: 0; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: #C9D3CC">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E2C27A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+Pago seguro · Sección para adultos
+</p>
+</div>
+</header>
+
+<main style="max-width: 1160px; margin: 0 auto; padding: 36px 28px 64px">
+<a href="Generator.dc.html" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 800; font-size: 15px; text-decoration: none; min-height: 44px">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Volver a la carta</a>
+<h1 style="margin: 8px 0 6px; font-family: 'Fraunces', serif; font-weight: 700; font-size: 38px; line-height: 1.1; color: #0F3324">Envío y pago</h1>
+<p style="margin: 0 0 28px; font-size: 17px; color: #4B5550">Revisa la carta y dinos a dónde enviar la respuesta de Santa.</p>
+
+<div style="display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start">
+<form style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+
+<fieldset style="margin: 0; border: 1px solid #E6DCC6; background: #FFFFFF; border-radius: 18px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<legend style="padding: 0 8px; font-weight: 800; font-size: 18px; color: #0F3324">1. Adulto responsable</legend>
+<div style="display: flex; flex-wrap: wrap; gap: 14px">
+<label style="flex: 1 1 240px; display: flex; flex-direction: column; gap: 6px; font-weight: 700; font-size: 14px">Nombre completo
+<input type="text" autocomplete="name" placeholder="Nombre y apellidos" style="font-size: 16px; padding: 12px 14px; border: 1.5px solid #D9CDB2; border-radius: 10px; min-height: 48px; box-sizing: border-box">
+</label>
+<label style="flex: 1 1 240px; display: flex; flex-direction: column; gap: 6px; font-weight: 700; font-size: 14px">Correo electrónico
+<input type="email" autocomplete="email" placeholder="tu@correo.com" style="font-size: 16px; padding: 12px 14px; border: 1.5px solid #D9CDB2; border-radius: 10px; min-height: 48px; box-sizing: border-box">
+</label>
+</div>
+<p style="margin: 0; font-size: 13px; color: #5A645F">Te enviaremos la confirmación y el número de orden a este correo.</p>
+</fieldset>
+
+<fieldset style="margin: 0; border: 1px solid #E6DCC6; background: #FFFFFF; border-radius: 18px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<legend style="padding: 0 8px; font-weight: 800; font-size: 18px; color: #0F3324">2. ¿A dónde enviamos la carta de Santa?</legend>
+<label style="display: flex; flex-direction: column; gap: 6px; font-weight: 700; font-size: 14px">Nombre en el sobre
+<input type="text" placeholder="Ej.: Sofía Rivera" style="font-size: 16px; padding: 12px 14px; border: 1.5px solid #D9CDB2; border-radius: 10px; min-height: 48px; box-sizing: border-box">
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-weight: 700; font-size: 14px">Dirección (línea 1)
+<input type="text" autocomplete="address-line1" placeholder="Calle, número, urbanización" style="font-size: 16px; padding: 12px 14px; border: 1.5px solid #D9CDB2; border-radius: 10px; min-height: 48px; box-sizing: border-box">
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-weight: 700; font-size: 14px">Dirección (línea 2) <span style="font-weight: 600; color: #5A645F">opcional</span>
+<input type="text" autocomplete="address-line2" placeholder="Apartamento, buzón, edificio" style="font-size: 16px; padding: 12px 14px; border: 1.5px solid #D9CDB2; border-radius: 10px; min-height: 48px; box-sizing: border-box">
+</label>
+<div style="display: flex; flex-wrap: wrap; gap: 14px">
+<label style="flex: 2 1 200px; display: flex; flex-direction: column; gap: 6px; font-weight: 700; font-size: 14px">Ciudad / pueblo
+<input type="text" autocomplete="address-level2" style="font-size: 16px; padding: 12px 14px; border: 1.5px solid #D9CDB2; border-radius: 10px; min-height: 48px; box-sizing: border-box">
+</label>
+<label style="flex: 1 1 140px; display: flex; flex-direction: column; gap: 6px; font-weight: 700; font-size: 14px">Estado / territorio
+<select autocomplete="address-level1" style="font-size: 16px; padding: 12px 14px; border: 1.5px solid #D9CDB2; border-radius: 10px; min-height: 48px; background: #FFFFFF"><option>Puerto Rico</option><option>Florida</option><option>Nueva York</option><option>Otro estado…</option></select>
+</label>
+<label style="flex: 1 1 120px; display: flex; flex-direction: column; gap: 6px; font-weight: 700; font-size: 14px">Código postal
+<input type="text" inputmode="numeric" autocomplete="postal-code" placeholder="00612" style="font-size: 16px; padding: 12px 14px; border: 1.5px solid #D9CDB2; border-radius: 10px; min-height: 48px; box-sizing: border-box">
+</label>
+</div>
+<p style="margin: 0; display: flex; gap: 8px; align-items: flex-start; font-size: 13px; color: #1F6B47; font-weight: 700">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4.5 4.5L19 7"/></svg>
+Verificamos la dirección con el servicio postal antes de imprimir.</p>
+</fieldset>
+
+<fieldset style="margin: 0; border: 1px solid #E6DCC6; background: #FFFFFF; border-radius: 18px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<legend style="padding: 0 8px; font-weight: 800; font-size: 18px; color: #0F3324">3. Pago</legend>
+<div style="border: 1.5px dashed #B9C4BE; background: #F7F9F8; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 10px">
+<p style="margin: 0; font-size: 13px; font-weight: 800; color: #4B5550; text-transform: uppercase; letter-spacing: 0.06em">Campo de pago de Stripe</p>
+<div style="display: flex; gap: 10px; flex-wrap: wrap">
+<div style="flex: 3 1 220px; height: 46px; border: 1.5px solid #D5DCD8; border-radius: 8px; background: #FFFFFF; display: flex; align-items: center; padding: 0 12px; color: #6B7570; font-size: 15px">Número de tarjeta</div>
+<div style="flex: 1 1 90px; height: 46px; border: 1.5px solid #D5DCD8; border-radius: 8px; background: #FFFFFF; display: flex; align-items: center; padding: 0 12px; color: #6B7570; font-size: 15px">MM / AA</div>
+<div style="flex: 1 1 80px; height: 46px; border: 1.5px solid #D5DCD8; border-radius: 8px; background: #FFFFFF; display: flex; align-items: center; padding: 0 12px; color: #6B7570; font-size: 15px">CVC</div>
+</div>
+</div>
+<p style="margin: 0; font-size: 13px; color: #5A645F">Los datos de la tarjeta los procesa Stripe. CartaParaSanta.com nunca los ve ni los guarda.</p>
+</fieldset>
+
+<label style="display: flex; gap: 12px; align-items: flex-start; background: #FFFFFF; border: 1px solid #E6DCC6; border-radius: 14px; padding: 18px; font-size: 15px; line-height: 1.5; color: #3B4540; cursor: pointer">
+<input type="checkbox" style="width: 22px; height: 22px; margin: 1px 0 0; accent-color: #1F6B47; flex: none">
+<span>Soy mayor de edad y padre, madre o tutor del niño o niña (o tengo su permiso). Acepto los <a href="Main.dc.html">Términos de servicio</a> y la <a href="Main.dc.html">Política de privacidad</a>.</span>
+</label>
+</form>
+
+<!-- SUMMARY -->
+<aside style="flex: 1 1 360px; min-width: 0; background: #FFFFFF; border: 1px solid #E6DCC6; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 18px">
+<h2 style="margin: 0; font-size: 20px; font-weight: 800; color: #0F3324">Tu pedido</h2>
+<div style="display: flex; gap: 16px; align-items: flex-start">
+<div style="flex: none; width: 104px; aspect-ratio: 3 / 4; background: #FFFDF7; border: 2px solid #B3261E; border-radius: 6px; padding: 8px; box-sizing: border-box; display: flex; flex-direction: column; gap: 5px">
+<div style="height: 5px; border-radius: 1px; background: repeating-linear-gradient(90deg,#B3261E 0 8px,#FFFDF7 8px 12px,#1F6B47 12px 20px,#FFFDF7 20px 24px)"></div>
+<p style="margin: 2px 0 0; text-align: center; font-family: 'Fraunces', serif; font-weight: 700; font-size: 8px; letter-spacing: 0.1em; color: #0F3324">POLO NORTE</p>
+<p style="margin: 0; font-family: 'Patrick Hand', cursive; font-size: 10px; color: #2A2A2A">Querido Santa:</p>
+<div style="height: 1.5px; background: #EADFC8"></div><div style="height: 1.5px; background: #EADFC8"></div><div style="height: 1.5px; width: 70%; background: #EADFC8"></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<p style="margin: 0; font-weight: 800; font-size: 16px">Carta de Sofía</p>
+<p style="margin: 0; font-size: 14px; color: #5A645F">Diseño: Clásica del Polo Norte</p>
+<p style="margin: 0; font-size: 14px; color: #5A645F">3 regalos en la lista</p>
+<a href="Generator.dc.html" style="font-size: 14px; font-weight: 800; margin-top: 4px">Ver o editar la carta</a>
+</div>
+</div>
+<div style="background: #FBF7EF; border-radius: 12px; padding: 14px 16px; font-size: 14px; line-height: 1.6; color: #3B4540">
+<p style="margin: 0 0 4px; font-weight: 800; color: #0F3324">Incluye</p>
+Respuesta personalizada de Santa · Copia impresa de la carta original · Sobre del Polo Norte
+</div>
+<dl style="margin: 0; display: grid; grid-template-columns: 1fr auto; row-gap: 10px; font-size: 15px">
+<dt style="color: #4B5550">Carta de Santa</dt><dd style="margin: 0; font-weight: 700">[PRECIO]</dd>
+<dt style="color: #4B5550">Envío postal</dt><dd style="margin: 0; font-weight: 700">[ENVÍO]</dd>
+<dt style="color: #4B5550">Impuestos (IVU)</dt><dd style="margin: 0; font-weight: 700">[IMPUESTOS]</dd>
+<dt style="padding-top: 12px; border-top: 1px solid #EADFC8; font-weight: 800; font-size: 17px; color: #0F3324">Total</dt><dd style="margin: 0; padding-top: 12px; border-top: 1px solid #EADFC8; font-weight: 800; font-size: 17px; color: #0F3324">[TOTAL]</dd>
+</dl>
+<a class="pay" href="Confirm.dc.html" style="background: #B3261E; color: #FFFFFF; text-decoration: none; font-weight: 800; font-size: 18px; padding: 0 24px; border-radius: 999px; min-height: 56px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 10px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+Pagar [TOTAL] y enviar al Polo Norte</a>
+<p style="margin: 0; text-align: center; font-size: 13px; color: #5A645F">Llega en [X–Y] días hábiles · Pide antes del [FECHA LÍMITE] para Navidad</p>
+</aside>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

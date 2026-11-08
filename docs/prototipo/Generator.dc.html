@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Generador de cartas</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&amp;family=Nunito:wght@400;600;700;800&amp;family=Patrick+Hand&amp;family=Pinyon+Script&amp;display=swap">
+<style>
+body{margin:0;background:#FBF7EF}
+a{color:#B3261E}a:hover{color:#8E1D17}
+input,textarea,button{font-family:inherit}
+input:focus,textarea:focus{outline:3px solid #E2C27A;outline-offset:1px}
+button{cursor:pointer}
+.chip:hover{background:#F7EFD9 !important}
+.primary:hover{background:#9C2019 !important}
+.ghost:hover{background:#F1EADB !important}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 1260px; font-family: 'Nunito', system-ui, sans-serif; color: #1F2A24; background: #FBF7EF">
+
+<header style="background: #0F3324; color: #FBF7EF">
+<div style="max-width: 1200px; margin: 0 auto; padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; color: #FBF7EF; text-decoration: none; min-height: 44px">
+<svg width="30" height="30" viewBox="0 0 34 34" aria-hidden="true"><rect x="3" y="8" width="28" height="19" rx="3" fill="#FBF7EF"/><path d="M3 10 L17 20 L31 10" fill="none" stroke="#B3261E" stroke-width="2.4"/><circle cx="17" cy="20" r="4" fill="#C9A24A"/></svg>
+<span style="font-family: 'Fraunces', serif; font-weight: 700; font-size: 20px">CartaParaSanta<span style="color: #E2C27A">.com</span></span>
+</a>
+<nav aria-label="Pasos" style="display: flex; gap: 8px; flex-wrap: wrap">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="4">
+<button type="button" onClick="{{s.go}}" style="{{s.style}}">
+<span style="{{s.dot}}">{{s.n}}</span>{{s.label}}
+</button>
+</sc-for>
+</nav>
+</div>
+</header>
+
+<main style="max-width: 1200px; margin: 0 auto; padding: 36px 28px 56px; display: flex; flex-wrap: wrap; gap: 36px; align-items: flex-start">
+
+<!-- LEFT PANEL -->
+<section style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+
+<sc-if value="{{s1}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<div>
+<h1 style="margin: 0; font-family: 'Fraunces', serif; font-weight: 700; font-size: 38px; line-height: 1.1; color: #0F3324">Elige tu carta</h1>
+<p style="margin: 8px 0 0; font-size: 18px; color: #4B5550">Toca el diseño que más te guste. Puedes cambiarlo cuando quieras.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(178px, 1fr)); gap: 16px">
+<sc-for list="{{designs}}" as="d" hint-placeholder-count="5">
+<button type="button" onClick="{{d.pick}}" aria-pressed="{{d.selected}}" style="{{d.cardStyle}}">
+<span style="display: block; width: 150px; height: 200px; margin: 0 auto; overflow: hidden; border-radius: 6px; position: relative; box-shadow: 0 4px 10px rgba(15,51,36,0.12)">
+<span style="display: block; position: absolute; left: 0; top: 0; width: 360px; height: 480px; transform: scale(0.41667); transform-origin: 0 0; pointer-events: none">
+<dc-import name="LetterArt" design="{{d.id}}" mini="{{ true }}" hint-size="360px,480px"></dc-import>
+</span>
+</span>
+<span style="display: block; margin-top: 10px; font-weight: 800; font-size: 15px; color: #0F3324; text-align: left">{{d.name}}</span>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{s2}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<div>
+<h1 style="margin: 0; font-family: 'Fraunces', serif; font-weight: 700; font-size: 38px; line-height: 1.1; color: #0F3324">Escribe tu carta</h1>
+<p style="margin: 8px 0 0; font-size: 18px; color: #4B5550">Mira cómo va quedando a la derecha.</p>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 14px">
+<label style="flex: 2 1 220px; display: flex; flex-direction: column; gap: 6px; font-weight: 800; font-size: 15px; color: #0F3324">Tu nombre <span style="font-weight: 600; color: #5A645F; font-size: 13px">(opcional)</span>
+<input type="text" value="{{name}}" onChange="{{onName}}" placeholder="Ej.: Sofía" style="font-size: 18px; padding: 12px 14px; border: 2px solid #E2D6BB; border-radius: 12px; background: #FFFFFF; min-height: 48px; box-sizing: border-box">
+</label>
+<label style="flex: 1 1 110px; display: flex; flex-direction: column; gap: 6px; font-weight: 800; font-size: 15px; color: #0F3324">Edad <span style="font-weight: 600; color: #5A645F; font-size: 13px">(opcional)</span>
+<input type="number" min="1" max="17" value="{{age}}" onChange="{{onAge}}" placeholder="7" style="font-size: 18px; padding: 12px 14px; border: 2px solid #E2D6BB; border-radius: 12px; background: #FFFFFF; min-height: 48px; box-sizing: border-box">
+</label>
+</div>
+<label style="display: flex; flex-direction: column; gap: 6px; font-weight: 800; font-size: 15px; color: #0F3324">Saludo
+<input type="text" value="{{greeting}}" onChange="{{onGreeting}}" style="font-size: 18px; padding: 12px 14px; border: 2px solid #E2D6BB; border-radius: 12px; background: #FFFFFF; min-height: 48px; box-sizing: border-box">
+</label>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<label for="msg" style="font-weight: 800; font-size: 15px; color: #0F3324">Tu mensaje para Santa</label>
+<textarea id="msg" rows="5" value="{{message}}" onChange="{{onMessage}}" placeholder="Cuéntale a Santa cómo ha sido tu año…" style="font-size: 18px; line-height: 1.5; padding: 12px 14px; border: 2px solid #E2D6BB; border-radius: 12px; background: #FFFFFF; resize: vertical"></textarea>
+<p style="margin: 4px 0 0; font-size: 14px; font-weight: 700; color: #5A645F">¿No sabes cómo empezar? Toca una idea:</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{ideas}}" as="i" hint-placeholder-count="4">
+<button type="button" class="chip" onClick="{{i.add}}" style="background: #FFFFFF; border: 1.5px dashed #C9A24A; color: #6B5016; border-radius: 999px; padding: 10px 14px; font-size: 15px; font-weight: 700; min-height: 44px">+ {{i.text}}</button>
+</sc-for>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; background: #FFFFFF; border: 2px solid #E2D6BB; border-radius: 16px; padding: 18px">
+<p style="margin: 0; font-weight: 800; font-size: 15px; color: #0F3324">Mi lista de regalos</p>
+<sc-for list="{{giftRows}}" as="g" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; gap: 10px; background: #FBF7EF; border-radius: 12px; padding: 6px 6px 6px 14px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B3261E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="9" width="18" height="12" rx="1.5"/><path d="M3 9h18v-3H3zM12 6v15M12 6c-2-4-6-3-5 0M12 6c2-4 6-3 5 0"/></svg>
+<span style="flex: 1; font-size: 17px; font-weight: 700">{{g.text}}</span>
+<button type="button" class="ghost" onClick="{{g.remove}}" aria-label="{{g.removeLabel}}" style="width: 44px; height: 44px; border: 0; background: transparent; border-radius: 10px; color: #5A645F; display: flex; align-items: center; justify-content: center">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+</button>
+</div>
+</sc-for>
+<div style="display: flex; gap: 10px; flex-wrap: wrap">
+<label for="giftin" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Nuevo regalo</label>
+<input id="giftin" type="text" value="{{giftDraft}}" onChange="{{onDraft}}" onKeyDown="{{onDraftKey}}" placeholder="Escribe un regalo…" style="flex: 1 1 200px; font-size: 17px; padding: 12px 14px; border: 2px solid #E2D6BB; border-radius: 12px; background: #FFFFFF; min-height: 48px; box-sizing: border-box">
+<button type="button" class="primary" onClick="{{addGift}}" style="background: #1F6B47; color: #FFFFFF; border: 0; border-radius: 12px; padding: 0 20px; font-size: 16px; font-weight: 800; min-height: 48px">Añadir</button>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 14px">
+<label style="flex: 1 1 200px; display: flex; flex-direction: column; gap: 6px; font-weight: 800; font-size: 15px; color: #0F3324">Despedida
+<input type="text" value="{{farewell}}" onChange="{{onFarewell}}" style="font-size: 18px; padding: 12px 14px; border: 2px solid #E2D6BB; border-radius: 12px; background: #FFFFFF; min-height: 48px; box-sizing: border-box">
+</label>
+<label style="flex: 1 1 200px; display: flex; flex-direction: column; gap: 6px; font-weight: 800; font-size: 15px; color: #0F3324">Firma
+<input type="text" value="{{signature}}" onChange="{{onSignature}}" placeholder="Tu nombre" style="font-size: 18px; padding: 12px 14px; border: 2px solid #E2D6BB; border-radius: 12px; background: #FFFFFF; min-height: 48px; box-sizing: border-box">
+</label>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{s3}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 18px">
+<div>
+<h1 style="margin: 0; font-family: 'Fraunces', serif; font-weight: 700; font-size: 38px; line-height: 1.1; color: #0F3324">¿Quedó perfecta?</h1>
+<p style="margin: 8px 0 0; font-size: 18px; color: #4B5550">Lee tu carta con calma. Si quieres cambiar algo, toca Editar.</p>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #EADFC8; border-radius: 16px; padding: 6px 18px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #F0E8D6">
+<div><p style="margin: 0; font-size: 13px; font-weight: 800; color: #5A645F; text-transform: uppercase; letter-spacing: 0.06em">Diseño</p><p style="margin: 2px 0 0; font-size: 17px; font-weight: 800">{{d.name}}</p></div>
+<button type="button" class="ghost" onClick="{{goStep1}}" style="border: 2px solid #E2D6BB; background: #FFFFFF; border-radius: 10px; padding: 0 16px; min-height: 44px; font-weight: 800; color: #0F3324">Editar</button>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #F0E8D6">
+<div><p style="margin: 0; font-size: 13px; font-weight: 800; color: #5A645F; text-transform: uppercase; letter-spacing: 0.06em">Mensaje</p><p style="margin: 2px 0 0; font-size: 17px; font-weight: 800">{{msgWords}}</p></div>
+<button type="button" class="ghost" onClick="{{goStep2}}" style="border: 2px solid #E2D6BB; background: #FFFFFF; border-radius: 10px; padding: 0 16px; min-height: 44px; font-weight: 800; color: #0F3324">Editar</button>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0">
+<div><p style="margin: 0; font-size: 13px; font-weight: 800; color: #5A645F; text-transform: uppercase; letter-spacing: 0.06em">Regalos</p><p style="margin: 2px 0 0; font-size: 17px; font-weight: 800">{{giftCount}}</p></div>
+<button type="button" class="ghost" onClick="{{goStep2}}" style="border: 2px solid #E2D6BB; background: #FFFFFF; border-radius: 10px; padding: 0 16px; min-height: 44px; font-weight: 800; color: #0F3324">Editar</button>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{s4}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 18px">
+<div style="background: #0F3324; color: #FBF7EF; border-radius: 20px; padding: 28px">
+<h1 style="margin: 0; font-family: 'Fraunces', serif; font-weight: 700; font-size: 34px; line-height: 1.1">¡Tu carta está lista!</h1>
+<p style="margin: 10px 0 0; font-size: 18px; line-height: 1.55; color: #E9E2D0">Ahora llama a mamá, papá o a un adulto para que ponga la dirección y la envíe al Polo Norte.</p>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #EADFC8; border-radius: 16px; padding: 20px; display: flex; gap: 14px; align-items: flex-start">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1F6B47" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+<p style="margin: 0; font-size: 16px; line-height: 1.55; color: #4B5550"><strong style="color: #0F3324">Para el adulto:</strong> en el siguiente paso revisarás la carta, la dirección de envío y el precio final antes de pagar.</p>
+</div>
+<a class="primary" href="Checkout.dc.html" style="align-self: flex-start; background: #B3261E; color: #FFFFFF; text-decoration: none; font-weight: 800; font-size: 19px; padding: 16px 28px; border-radius: 999px; min-height: 54px; box-sizing: border-box; display: inline-flex; align-items: center; gap: 10px">Continuar al envío
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+</a>
+</div>
+</sc-if>
+
+<div style="display: flex; justify-content: space-between; gap: 12px; padding-top: 8px; border-top: 1px solid #EADFC8">
+<sc-if value="{{hasBack}}" hint-placeholder-val="{{ false }}">
+<button type="button" class="ghost" onClick="{{back}}" style="border: 2px solid #E2D6BB; background: #FFFFFF; border-radius: 999px; padding: 0 22px; min-height: 50px; font-weight: 800; font-size: 16px; color: #0F3324">Atrás</button>
+</sc-if>
+<span style="flex: 1"></span>
+<sc-if value="{{hasNext}}" hint-placeholder-val="{{ true }}">
+<button type="button" class="primary" onClick="{{next}}" style="background: #B3261E; color: #FFFFFF; border: 0; border-radius: 999px; padding: 0 26px; min-height: 50px; font-weight: 800; font-size: 17px">{{nextLabel}}</button>
+</sc-if>
+</div>
+</section>
+
+<!-- LIVE PREVIEW -->
+<aside aria-label="Vista previa de la carta" style="flex: 1 1 400px; min-width: 0; display: flex; flex-direction: column; gap: 10px">
+<p style="margin: 0; font-size: 13px; font-weight: 800; color: #5A645F; letter-spacing: 0.08em; text-transform: uppercase">Vista previa · {{d.name}}</p>
+<div style="box-shadow: 0 18px 40px rgba(15,51,36,0.18); border-radius: 6px">
+<dc-import name="LetterArt" design="{{d.id}}" greeting="{{greeting}}" intro="{{introLine}}" message="{{previewMessage}}" dim="{{msgDim}}" gifts="{{giftTexts}}" farewell="{{farewell}}" sign-off="{{signOff}}" hint-size="100%,680px"></dc-import>
+</div>
+</aside>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1260}}'>
+var DESIGNS = [
+  { id: 'clasica', name: 'Correo aéreo clásico' },
+  { id: 'taller', name: 'Taller de los duendes' },
+  { id: 'estrellas', name: 'Noche de estrellas' },
+  { id: 'polonorte', name: 'Cielo del Polo Norte' },
+  { id: 'juguetes', name: 'Juguetes en acuarela' }
+];
+var IDEAS = ['Este año me porté muy bien.', 'Ayudé mucho en casa.', 'Aprendí algo nuevo en la escuela.', '¿Cómo están los renos?', 'Te dejaré galletas y leche.'];
+var LABELS = ['Diseño', 'Escribir', 'Revisar', 'Enviar'];
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      step: 1, designId: 'clasica', name: 'Sofía', age: '7',
+      greeting: 'Querido Santa:',
+      message: 'Este año me porté muy bien y ayudé a mi mamá con mi hermanito. ¿Cómo están Rodolfo y los demás renos?',
+      gifts: ['Una bicicleta roja', 'Un set de pintura', 'Un libro de dinosaurios'],
+      giftDraft: '', farewell: 'Con mucho cariño,', signature: ''
+    };
+  }
+  set(k) { var self = this; return function (e) { var o = {}; o[k] = e.target.value; self.setState(o); }; }
+  go(n) { var self = this; return function () { self.setState({ step: n }); }; }
+  addGift() {
+    var t = (this.state.giftDraft || '').trim();
+    if (!t) return;
+    this.setState({ gifts: this.state.gifts.concat([t]), giftDraft: '' });
+  }
+  renderVals() {
+    var self = this, st = this.state;
+    var d = DESIGNS.filter(function (x) { return x.id === st.designId; })[0] || DESIGNS[0];
+    var steps = LABELS.map(function (label, i) {
+      var n = i + 1, on = n === st.step, done = n < st.step;
+      return {
+        n: n, label: label, go: self.go(n),
+        style: 'display:flex;align-items:center;gap:8px;min-height:44px;padding:0 14px 0 6px;border-radius:999px;font-weight:800;font-size:15px;border:0;' + (on ? 'background:#FBF7EF;color:#0F3324' : 'background:transparent;color:' + (done ? '#E2C27A' : '#C9D3CC')),
+        dot: 'width:30px;height:30px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;' + (on ? 'background:#B3261E;color:#FFFFFF' : done ? 'background:#C9A24A;color:#0F3324' : 'background:rgba(255,255,255,0.12);color:#E9E2D0')
+      };
+    });
+    var designs = DESIGNS.map(function (x) {
+      var sel = x.id === st.designId;
+      return Object.assign({}, x, {
+        selected: sel ? 'true' : 'false',
+        pick: function () { self.setState({ designId: x.id }); },
+        cardStyle: 'background:#FFFFFF;border-radius:16px;padding:12px;text-align:left;width:100%;' + (sel ? 'border:3px solid #B3261E;box-shadow:0 8px 20px rgba(179,38,30,0.18)' : 'border:3px solid #EADFC8')
+      });
+    });
+    var giftRows = st.gifts.map(function (g, i) {
+      return { text: g, removeLabel: 'Quitar ' + g, remove: function () { self.setState({ gifts: st.gifts.filter(function (_, j) { return j !== i; }) }); } };
+    });
+    var ideas = IDEAS.map(function (t) {
+      return { text: t, add: function () { var m = self.state.message; self.setState({ message: m ? m.replace(/\s*$/, '') + ' ' + t : t }); } };
+    });
+    var intro = '';
+    if (st.name && st.age) intro = 'Me llamo ' + st.name + ' y tengo ' + st.age + ' años.';
+    else if (st.name) intro = 'Me llamo ' + st.name + '.';
+    else if (st.age) intro = 'Tengo ' + st.age + ' años.';
+    var words = (st.message || '').trim() ? (st.message.trim().split(/\s+/).length + ' palabras') : 'Sin mensaje todavía';
+    return {
+      d: d, steps: steps, designs: designs, giftRows: giftRows, ideas: ideas,
+      s1: st.step === 1, s2: st.step === 2, s3: st.step === 3, s4: st.step === 4,
+      hasBack: st.step > 1, hasNext: st.step < 4,
+      nextLabel: st.step === 1 ? 'Escribir mi carta' : st.step === 2 ? 'Ver mi carta' : 'Está lista',
+      back: this.go(Math.max(1, st.step - 1)), next: this.go(Math.min(4, st.step + 1)),
+      goStep1: this.go(1), goStep2: this.go(2),
+      name: st.name, age: st.age, greeting: st.greeting, message: st.message,
+      farewell: st.farewell, signature: st.signature, giftDraft: st.giftDraft,
+      onName: this.set('name'), onAge: this.set('age'), onGreeting: this.set('greeting'),
+      onMessage: this.set('message'), onFarewell: this.set('farewell'), onSignature: this.set('signature'),
+      onDraft: this.set('giftDraft'),
+      onDraftKey: function (e) { if (e.key === 'Enter') { e.preventDefault(); self.addGift(); } },
+      addGift: function () { self.addGift(); },
+      introLine: intro,
+      previewMessage: st.message || 'Aquí aparecerá tu mensaje para Santa…',
+      msgDim: !st.message,
+      giftTexts: st.gifts.slice(),
+      noGifts: st.gifts.length === 0,
+      signOff: st.signature || st.name || 'Tu nombre',
+      msgWords: words,
+      giftCount: st.gifts.length === 1 ? '1 regalo' : st.gifts.length + ' regalos'
+    };
+  }
+}
+</script>
+</body>
+</html>
