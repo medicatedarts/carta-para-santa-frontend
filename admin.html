@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Panel · CartaParaSanta.com</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/base.css">
+<style>
+  body { background: #F6F2E9; }
+  .site-header .acc { display: flex; gap: 10px; align-items: center; }
+  .site-header .btn { min-height: 40px; font-size: 14px; padding: 0 16px; }
+  main { padding-top: 22px; padding-bottom: 60px; }
+  h1 { font-family: 'Fraunces', serif; font-size: 28px; color: var(--pino); margin: 0 0 14px; }
+  h2 { font-size: 18px; color: var(--pino); margin: 0 0 10px; }
+  .card { background: #FFFFFF; border: 1px solid #E6DCC6; border-radius: 16px; padding: 18px; }
+  .login { max-width: 420px; margin: 60px auto; display: flex; flex-direction: column; gap: 14px; }
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .tab { border: 2px solid #E2D6BB; background: #FFFFFF; border-radius: 999px; padding: 0 14px; min-height: 40px; font-weight: 800; font-size: 14px; color: var(--pino); }
+  .tab[aria-selected="true"] { background: var(--pino); border-color: var(--pino); color: #FFFFFF; }
+  .tab b { display: inline-block; min-width: 22px; margin-left: 6px; padding: 0 6px; border-radius: 999px; background: #F1EADB; color: var(--pino); font-size: 12px; line-height: 20px; }
+  .tab[aria-selected="true"] b { background: var(--dorado); }
+  .tab.alerta b { background: var(--rojo); color: #FFFFFF; }
+  .cols { display: grid; grid-template-columns: 1fr; gap: 18px; }
+  @media (min-width: 1000px) { .cols { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); } }
+  .buscar { display: flex; gap: 8px; margin-bottom: 12px; }
+  .buscar input { flex: 1; min-width: 0; font-size: 15px; padding: 10px 12px; border: 1.5px solid #D9CDB2; border-radius: 10px; min-height: 42px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 9px 8px; border-bottom: 1px solid #F0E8D6; vertical-align: top; }
+  th { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--texto-3); }
+  tr.fila-o { cursor: pointer; }
+  tr.fila-o:hover, tr.fila-o.sel { background: #FBF4E4; }
+  .estado { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 800; background: #EEE; white-space: nowrap; }
+  .e-needs_review { background: #FFF1C9; color: #6B5016; }
+  .e-error { background: #FBE0DC; color: #7A1610; }
+  .e-paid { background: #E3ECF7; color: #22406B; }
+  .e-sent_to_lob { background: #E8E3F7; color: #43307A; }
+  .e-mailed, .e-in_transit, .e-delivered { background: #E1F0E7; color: #154A31; }
+  .e-pending_payment, .e-cancelled, .e-refunded { background: #EDEDED; color: #555; }
+  .det dl { display: grid; grid-template-columns: 130px 1fr; gap: 6px 12px; margin: 0 0 14px; font-size: 14px; }
+  .det dt { color: var(--texto-3); font-weight: 800; }
+  .det dd { margin: 0; overflow-wrap: anywhere; }
+  .det .carta { white-space: pre-wrap; background: var(--crema); border-radius: 10px; padding: 12px; font-size: 14px; margin-bottom: 14px; }
+  .det iframe { width: 100%; height: 620px; border: 1px solid #E6DCC6; border-radius: 10px; background: #FFF; }
+  .acciones { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+  .acciones .btn { min-height: 42px; font-size: 14px; padding: 0 16px; }
+  .dir-form { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .dir-form input { font-size: 14px; padding: 8px 10px; border: 1.5px solid #D9CDB2; border-radius: 8px; min-height: 40px; }
+  .dir-form .full { grid-column: 1 / -1; }
+  .ajustes { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; align-items: end; }
+  .ajustes .campo input, .ajustes .campo select { font-size: 15px; min-height: 42px; padding: 8px 10px; }
+  .totales td, .totales th { padding: 6px 8px; }
+  .msg { margin: 10px 0 0; }
+  .vacio { color: var(--texto-3); padding: 20px 0; text-align: center; }
+  .sec { margin-top: 18px; }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="index.html"><span>CartaParaSanta<b>.com</b> · Panel</span></a>
+    <div class="acc" id="acc" hidden>
+      <button class="btn btn-borde" id="btn-recargar" type="button">Recargar</button>
+      <button class="btn btn-borde" id="btn-salir" type="button">Salir</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <form class="card login" id="login" hidden>
+    <h1>Panel del taller</h1>
+    <label class="campo">Token de administración
+      <input type="password" id="token" autocomplete="current-password" required>
+    </label>
+    <button class="btn btn-rojo" type="submit">Entrar</button>
+    <div class="aviso aviso-error" id="login-err" hidden></div>
+  </form>
+
+  <div id="app" hidden>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="cols">
+      <section class="card">
+        <form class="buscar" id="buscar">
+          <input type="search" id="q" placeholder="Buscar por correo, número PN- o nombre en el sobre">
+          <button class="btn btn-borde" type="submit" style="min-height:42px">Buscar</button>
+        </form>
+        <div id="lista"></div>
+      </section>
+      <section class="card det" id="detalle"><p class="vacio">Escoge una orden para ver el detalle.</p></section>
+    </div>
+
+    <div class="cols sec">
+      <section class="card">
+        <h2>Ajustes</h2>
+        <form class="ajustes" id="ajustes">
+          <label class="campo">Precio (centavos)<input type="number" name="priceCents" min="50" step="1"></label>
+          <label class="campo">Buzón
+            <select name="mailboxOpen"><option value="true">Abierto</option><option value="false">Cerrado</option></select>
+          </label>
+          <label class="campo">Fecha recomendada<input type="date" name="deadlineRecommended"></label>
+          <label class="campo">Cierre del buzón<input type="date" name="mailboxCloseDate"></label>
+          <button class="btn btn-verde" type="submit" style="min-height:42px">Guardar ajustes</button>
+        </form>
+        <div class="aviso msg" id="ajustes-msg" hidden></div>
+      </section>
+      <section class="card">
+        <h2>Totales por día (pagadas)</h2>
+        <div id="totales"></div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="js/config.js"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = CPS.esc;
+  var TOKEN_KEY = 'cps_admin_token';
+  var token = sessionStorage.getItem(TOKEN_KEY) || '';
+  var TABS = [
+    { id: 'needs_review', label: 'Revisión', statuses: ['needs_review'], alerta: true },
+    { id: 'error', label: 'Errores', statuses: ['error'], alerta: true },
+    { id: 'paid', label: 'Pagadas', statuses: ['paid'] },
+    { id: 'sent_to_lob', label: 'En Lob', statuses: ['sent_to_lob'] },
+    { id: 'enviadas', label: 'Enviadas', statuses: ['mailed', 'in_transit', 'delivered'] },
+    { id: 'todas', label: 'Todas', statuses: null }
+  ];
+  var LABEL = { pending_payment: 'Sin pagar', paid: 'Pagada', needs_review: 'Revisión', sent_to_lob: 'En Lob', error: 'Error', mailed: 'Enviada', in_transit: 'En tránsito', delivered: 'Entregada', cancelled: 'Cancelada', refunded: 'Reembolsada' };
+  var current = 'needs_review';
+  var selected = null;
+  var counts = {};
+
+  function api(path, opts) {
+    opts = opts || {};
+    var headers = Object.assign({ 'x-admin-token': token }, opts.body ? { 'Content-Type': 'application/json' } : {});
+    return fetch(CPS.BACKEND_URL + '/api/admin' + path, { method: opts.method || 'GET', headers: headers, body: opts.body ? JSON.stringify(opts.body) : undefined })
+      .then(function (r) {
+        if (r.status === 401) { logout(); throw new Error('Token incorrecto.'); }
+        var isJson = (r.headers.get('content-type') || '').indexOf('json') >= 0;
+        return (isJson ? r.json() : r.text()).then(function (b) { if (!r.ok) throw new Error((b && b.error) || 'Error ' + r.status); return b; });
+      });
+  }
+
+  function money(c) { return CPS.money(c || 0); }
+  function fecha(t) { return t ? new Date(t).toLocaleString('es-PR', { dateStyle: 'short', timeStyle: 'short' }) : '—'; }
+  function badge(s) { return '<span class="estado e-' + esc(s) + '">' + esc(LABEL[s] || s) + '</span>'; }
+
+  // ---------- Sesión ----------
+  function logout() {
+    sessionStorage.removeItem(TOKEN_KEY);
+    token = '';
+    $('app').hidden = true; $('acc').hidden = true; $('login').hidden = false;
+  }
+  $('login').addEventListener('submit', function (e) {
+    e.preventDefault();
+    token = $('token').value.trim();
+    api('/stats').then(function () {
+      sessionStorage.setItem(TOKEN_KEY, token);
+      start();
+    }).catch(function (err) { $('login-err').textContent = err.message; $('login-err').hidden = false; });
+  });
+  $('btn-salir').addEventListener('click', logout);
+  $('btn-recargar').addEventListener('click', function () { refresh(); });
+
+  function start() {
+    $('login').hidden = true; $('app').hidden = false; $('acc').hidden = false;
+    loadSettings();
+    refresh();
+  }
+
+  function refresh() {
+    api('/stats').then(function (s) {
+      counts = {};
+      s.byStatus.forEach(function (r) { counts[r.status] = r.n; });
+      renderTabs();
+      renderTotales(s.byDay);
+    }).catch(function () {});
+    loadList();
+    if (selected) openOrder(selected);
+  }
+
+  // ---------- Pestañas y lista ----------
+  function tabCount(t) {
+    if (!t.statuses) return Object.keys(counts).reduce(function (n, k) { return n + counts[k]; }, 0);
+    return t.statuses.reduce(function (n, s) { return n + (counts[s] || 0); }, 0);
+  }
+  function renderTabs() {
+    var el = $('tabs');
+    el.innerHTML = '';
+    TABS.forEach(function (t) {
+      var n = tabCount(t);
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('role', 'tab');
+      b.className = 'tab' + (t.alerta && n ? ' alerta' : '');
+      b.setAttribute('aria-selected', String(t.id === current));
+      b.innerHTML = esc(t.label) + '<b>' + n + '</b>';
+      b.addEventListener('click', function () { current = t.id; $('q').value = ''; renderTabs(); loadList(); });
+      el.appendChild(b);
+    });
+  }
+
+  function loadList() {
+    var t = TABS.filter(function (x) { return x.id === current; })[0];
+    var q = $('q').value.trim();
+    var path = '/orders?limit=200';
+    if (q) path += '&q=' + encodeURIComponent(q);
+    else if (t.statuses && t.statuses.length === 1) path += '&status=' + t.statuses[0];
+    api(path).then(function (rows) {
+      if (!q && t.statuses) rows = rows.filter(function (r) { return t.statuses.indexOf(r.status) >= 0; });
+      if (!rows.length) { $('lista').innerHTML = '<p class="vacio">No hay órdenes aquí.</p>'; return; }
+      var h = '<table><thead><tr><th>Orden</th><th>Estado</th><th>Para</th><th>Creada</th></tr></thead><tbody>';
+      rows.forEach(function (r) {
+        h += '<tr class="fila-o' + (r.id === selected ? ' sel' : '') + '" data-id="' + esc(r.id) + '" tabindex="0">' +
+          '<td><strong>' + esc(r.order_number) + '</strong><br><small>' + esc(r.buyer_email || '') + '</small></td>' +
+          '<td>' + badge(r.status) + (r.review_reason ? '<br><small>' + esc(r.review_reason) + '</small>' : '') + (r.error ? '<br><small style="color:#7A1610">' + esc(r.error) + '</small>' : '') + '</td>' +
+          '<td>' + esc(r.ship_name || r.child_name || '—') + '<br><small>' + esc([r.ship_city, r.ship_state].filter(Boolean).join(', ')) + '</small></td>' +
+          '<td><small>' + fecha(r.created_at) + '</small></td></tr>';
+      });
+      h += '</tbody></table>';
+      $('lista').innerHTML = h;
+      $('lista').querySelectorAll('.fila-o').forEach(function (tr) {
+        var open = function () { openOrder(tr.dataset.id); };
+        tr.addEventListener('click', open);
+        tr.addEventListener('keydown', function (e) { if (e.key === 'Enter') open(); });
+      });
+    }).catch(function (err) { $('lista').innerHTML = '<div class="aviso aviso-error">' + esc(err.message) + '</div>'; });
+  }
+  $('buscar').addEventListener('submit', function (e) { e.preventDefault(); loadList(); });
+
+  // ---------- Detalle ----------
+  function openOrder(id) {
+    selected = id;
+    document.querySelectorAll('.fila-o').forEach(function (tr) { tr.classList.toggle('sel', tr.dataset.id === id); });
+    api('/orders/' + encodeURIComponent(id)).then(renderDetail).catch(function (err) {
+      $('detalle').innerHTML = '<div class="aviso aviso-error">' + esc(err.message) + '</div>';
+    });
+  }
+
+  function renderDetail(o) {
+    var gifts = Array.isArray(o.gifts) ? o.gifts : [];
+    var dir = [o.ship_name, o.ship_line1, o.ship_line2, [o.ship_city, o.ship_state, o.ship_zip].filter(Boolean).join(' ')].filter(Boolean).join('\n');
+    var canApprove = o.status === 'needs_review';
+    var canResend = (o.status === 'error' || o.status === 'paid') && !o.lob_letter_id;
+    var canRefund = ['paid', 'needs_review', 'error'].indexOf(o.status) >= 0 && !o.lob_letter_id;
+    var canEditAddr = !o.lob_letter_id;
+    var h = '<h2>' + esc(o.order_number) + ' ' + badge(o.status) + '</h2>';
+    if (o.review_reason) h += '<div class="aviso aviso-info" style="margin-bottom:12px">Revisión: ' + esc(o.review_reason) + '</div>';
+    if (o.error) h += '<div class="aviso aviso-error" style="margin-bottom:12px">Error: ' + esc(o.error) + '</div>';
+    h += '<dl>' +
+      '<dt>Adulto</dt><dd>' + esc(o.buyer_name || '') + '<br>' + esc(o.buyer_email || '') + '</dd>' +
+      '<dt>Dirección</dt><dd style="white-space:pre-line">' + esc(dir || '— (borrada por retención)') + '</dd>' +
+      '<dt>Diseño</dt><dd>' + esc(CPS.designName(o.design)) + '</dd>' +
+      '<dt>Monto</dt><dd>' + money(o.amount_cents) + '</dd>' +
+      '<dt>Creada</dt><dd>' + fecha(o.created_at) + '</dd>' +
+      '<dt>Pagada</dt><dd>' + fecha(o.paid_at) + '</dd>' +
+      '<dt>Enviada</dt><dd>' + fecha(o.mailed_at) + (o.lob_expected_delivery ? ' · llega ~' + esc(o.lob_expected_delivery) : '') + '</dd>' +
+      '<dt>Lob</dt><dd>' + (o.lob_letter_id ? esc(o.lob_letter_id) + (o.lobUrl ? ' · <a href="' + esc(o.lobUrl) + '" target="_blank" rel="noopener">PDF de Lob</a>' : '') : '—') + '</dd>' +
+      '</dl>';
+    h += '<div class="carta">' + esc(o.greeting || '') + '\n' + esc(CPS.introLine(o.child_name, o.child_age)) + '\n' + esc(o.message || '') +
+      (gifts.length ? '\n\nRegalos:\n' + gifts.map(function (g, i) { return (i + 1) + '. ' + esc(g); }).join('\n') : '') +
+      '\n\n' + esc(o.farewell || '') + '\n' + esc(o.signature || o.child_name || '') + '</div>';
+    h += '<div class="acciones">' +
+      (canApprove ? '<button class="btn btn-verde" data-acc="approve" type="button">Aprobar y enviar a Lob</button>' : '') +
+      (canResend ? '<button class="btn btn-verde" data-acc="resend" type="button">Reenviar a Lob</button>' : '') +
+      (canEditAddr ? '<button class="btn btn-borde" data-acc="addr" type="button">Corregir dirección</button>' : '') +
+      (canRefund ? '<button class="btn btn-borde" data-acc="refund" type="button" style="color:#7A1610">Reembolsar</button>' : '') +
+      '<button class="btn btn-borde" data-acc="preview" type="button">Vista de impresión</button>' +
+      '</div><div id="acc-msg"></div><div id="acc-extra"></div>';
+    $('detalle').innerHTML = h;
+
+    $('detalle').querySelectorAll('[data-acc]').forEach(function (b) {
+      b.addEventListener('click', function () { action(b.dataset.acc, o, b); });
+    });
+  }
+
+  function say(msg, ok) {
+    $('acc-msg').innerHTML = '<div class="aviso ' + (ok ? 'aviso-ok' : 'aviso-error') + '" style="margin-bottom:10px">' + esc(msg) + '</div>';
+  }
+
+  function action(kind, o, btn) {
+    if (kind === 'preview') {
+      // El iframe no puede mandar el header del token: se pide el HTML y se pone en srcdoc.
+      api('/orders/' + o.id + '/preview').then(function (html) {
+        $('acc-extra').innerHTML = '<iframe title="Vista de impresión" sandbox></iframe>';
+        $('acc-extra').querySelector('iframe').srcdoc = html;
+      }).catch(function (err) { say(err.message); });
+      return;
+    }
+    if (kind === 'addr') {
+      var f = $('acc-extra');
+      f.innerHTML = '<form class="dir-form" id="dir-form">' +
+        '<input class="full" name="name" placeholder="Nombre" value="' + esc(o.ship_name || '') + '">' +
+        '<input class="full" name="line1" placeholder="Línea 1" value="' + esc(o.ship_line1 || '') + '">' +
+        '<input class="full" name="line2" placeholder="Línea 2" value="' + esc(o.ship_line2 || '') + '">' +
+        '<input name="city" placeholder="Ciudad" value="' + esc(o.ship_city || '') + '">' +
+        '<input name="state" placeholder="Estado (PR)" maxlength="2" value="' + esc(o.ship_state || '') + '">' +
+        '<input name="zip" placeholder="ZIP" value="' + esc(o.ship_zip || '') + '">' +
+        '<button class="btn btn-verde" type="submit" style="min-height:40px">Guardar dirección</button></form>';
+      $('dir-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var fd = new FormData(e.target), body = {};
+        fd.forEach(function (v, k) { body[k] = v.trim(); });
+        api('/orders/' + o.id + '/address', { method: 'PATCH', body: body }).then(function (u) {
+          renderDetail(Object.assign({}, o, u)); say('Dirección guardada. Si estaba en error, usa "Reenviar a Lob".', true);
+        }).catch(function (err) { say(err.message); });
+      });
+      return;
+    }
+    var confirmText = { approve: '¿Aprobar esta carta y enviarla a Lob? Lob la imprimirá y la cobrará.', resend: '¿Reenviar esta carta a Lob?', refund: '¿Reembolsar el pago completo de esta orden? No se enviará la carta.' }[kind];
+    if (!window.confirm(confirmText)) return;
+    btn.disabled = true;
+    api('/orders/' + o.id + '/' + kind, { method: 'POST' }).then(function () {
+      say({ approve: 'Aprobada y enviada a Lob.', resend: 'Reenviada a Lob.', refund: 'Reembolso hecho en Stripe.' }[kind], true);
+      refresh();
+    }).catch(function (err) { btn.disabled = false; say(err.message); });
+  }
+
+  // ---------- Ajustes y totales ----------
+  function loadSettings() {
+    api('/settings').then(function (s) {
+      var f = $('ajustes').elements;
+      f.priceCents.value = s.priceCents || '';
+      f.mailboxOpen.value = String(s.mailboxOpen !== false);
+      f.deadlineRecommended.value = s.deadlineRecommended || '';
+      f.mailboxCloseDate.value = s.mailboxCloseDate || '';
+    }).catch(function () {});
+  }
+  $('ajustes').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var f = e.target.elements;
+    var body = { priceCents: Number(f.priceCents.value), mailboxOpen: f.mailboxOpen.value === 'true' };
+    if (f.deadlineRecommended.value) body.deadlineRecommended = f.deadlineRecommended.value;
+    if (f.mailboxCloseDate.value) body.mailboxCloseDate = f.mailboxCloseDate.value;
+    var m = $('ajustes-msg');
+    api('/settings', { method: 'PATCH', body: body }).then(function () {
+      m.className = 'aviso aviso-ok msg'; m.textContent = 'Ajustes guardados. Precio actual: ' + money(body.priceCents) + '.'; m.hidden = false;
+    }).catch(function (err) { m.className = 'aviso aviso-error msg'; m.textContent = err.message; m.hidden = false; });
+  });
+
+  function renderTotales(days) {
+    if (!days || !days.length) { $('totales').innerHTML = '<p class="vacio">Todavía no hay órdenes pagadas.</p>'; return; }
+    var tot = days.reduce(function (a, d) { return { n: a.n + d.orders, c: a.c + d.cents }; }, { n: 0, c: 0 });
+    var h = '<table class="totales"><thead><tr><th>Día</th><th>Órdenes</th><th>Cobrado</th></tr></thead><tbody>';
+    days.forEach(function (d) { h += '<tr><td>' + esc(d.day) + '</td><td>' + d.orders + '</td><td>' + money(d.cents) + '</td></tr>'; });
+    h += '<tr><th>Total</th><th>' + tot.n + '</th><th>' + money(tot.c) + '</th></tr></tbody></table>';
+    $('totales').innerHTML = h;
+  }
+
+  if (token) api('/stats').then(start).catch(logout); else logout();
+})();
+</script>
+</body>
+</html>

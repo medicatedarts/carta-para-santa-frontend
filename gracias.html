@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>¡Tu carta llegó al Polo Norte! · CartaParaSanta.com</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0F3324">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/base.css">
+<style>
+  @keyframes cf-snow { from { background-position: 0 0, 11px 17px; } to { background-position: 0 420px, 11px 287px; } }
+  @keyframes cf-fly { 0% { transform: translate(-160px, 120px) rotate(-25deg) scale(0.6); opacity: 0; } 60% { opacity: 1; } 100% { transform: translate(0, 0) rotate(0) scale(1); opacity: 1; } }
+  @keyframes cf-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  @keyframes cf-dash { to { stroke-dashoffset: -36; } }
+  @keyframes cf-twinkle { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.25; transform: scale(0.6); } }
+  @keyframes cf-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes cf-pulse { 0% { box-shadow: 0 0 0 0 rgba(201,162,74,0.7); } 100% { box-shadow: 0 0 0 10px rgba(201,162,74,0); } }
+  @keyframes cf-check { from { transform: scale(0); } 70% { transform: scale(1.2); } to { transform: scale(1); } }
+
+  html, body { min-height: 100%; }
+  body { background-color: var(--pino); background-image: radial-gradient(#FFFFFF 1.2px, transparent 1.6px), radial-gradient(rgba(255,255,255,0.5) 1px, transparent 1.4px); background-size: 42px 42px, 27px 27px; background-position: 0 0, 11px 17px; color: var(--crema); animation: cf-snow 16s linear infinite; }
+  a { color: var(--dorado-claro); }
+  a:hover { color: #F3D58A; }
+  main { max-width: 440px; min-height: 100vh; min-height: 100dvh; margin: 0 auto; padding: 48px 24px 28px; display: flex; flex-direction: column; gap: 22px; }
+
+  .vuelo { align-self: center; position: relative; width: 150px; height: 120px; }
+  .vuelo svg { position: absolute; inset: 0; }
+  .ruta { animation: cf-dash 1.2s linear infinite; }
+  .tw { transform-box: fill-box; transform-origin: center; animation: cf-twinkle 2.2s ease-in-out infinite; }
+  .tw2 { animation-delay: 1.1s; }
+  .fly { position: absolute; left: 0; top: 0; width: 150px; height: 120px; animation: cf-fly 1.4s cubic-bezier(.2,.8,.2,1) both; }
+  .bob { width: 150px; height: 120px; animation: cf-bob 4s ease-in-out 1.4s infinite; }
+  .up { animation: cf-up .7s ease-out both; }
+  .d1 { animation-delay: .9s; } .d2 { animation-delay: 1.2s; } .d3 { animation-delay: 1.5s; }
+
+  h1 { margin: 0; font-family: 'Fraunces', serif; font-weight: 700; font-size: 32px; line-height: 1.1; text-align: center; }
+  .txt { text-align: center; }
+  .txt p { margin: 14px 0 0; font-size: 17px; line-height: 1.55; color: var(--sobre-verde); }
+  .txt .suena { margin-top: 12px; font-family: 'Patrick Hand', cursive; font-size: 24px; color: var(--dorado-claro); }
+
+  .estado { background: var(--crema); color: var(--texto); border-radius: 18px; padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 12px; }
+  .estado .cab { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .estado .cab p { margin: 0; }
+  .estado .k { font-size: 12px; font-weight: 800; color: var(--texto-3); text-transform: uppercase; letter-spacing: 0.08em; }
+  .estado .num { font-weight: 800; font-size: 15px; color: var(--pino); }
+  .estado ol { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .estado li { display: flex; gap: 12px; align-items: center; font-size: 15px; font-weight: 800; color: var(--texto-2); }
+  .estado li.hecho { color: var(--pino); }
+  .marca { width: 26px; height: 26px; border-radius: 999px; flex: none; display: inline-flex; align-items: center; justify-content: center; border: 2px solid #D9CDB2; }
+  li.hecho .marca { background: var(--verde); border: 0; animation: cf-check .5s ease-out 1.8s both; }
+  li.activo .marca { border-color: var(--dorado); animation: cf-pulse 1.6s ease-out infinite; }
+  .estado .nota { margin: 2px 0 0; font-size: 13px; line-height: 1.5; color: var(--texto-3); }
+  .volver { margin-top: auto; align-self: center; font-weight: 800; font-size: 16px; min-height: 44px; display: inline-flex; align-items: center; }
+</style>
+</head>
+<body>
+<main>
+  <div class="vuelo" aria-hidden="true">
+    <svg viewBox="0 0 150 120" width="150" height="120">
+      <path class="ruta" d="M10 70 q30 -50 70 -40" fill="none" stroke="rgba(226,194,122,0.7)" stroke-width="2" stroke-dasharray="3 6"/>
+      <path class="tw" d="M20 30l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#E2C27A"/>
+      <path class="tw tw2" d="M130 88l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#E2C27A"/>
+    </svg>
+    <div class="fly"><div class="bob">
+      <svg viewBox="0 0 150 120" width="150" height="120">
+        <g transform="translate(62 18) rotate(-10)"><rect x="0" y="0" width="76" height="50" rx="5" fill="#FBF7EF"/><path d="M0 4 L38 30 L76 4" fill="none" stroke="#B3261E" stroke-width="3"/><circle cx="38" cy="30" r="8" fill="#C9A24A"/><path d="M34 30l3 3 6-6" fill="none" stroke="#0F3324" stroke-width="2.2" stroke-linecap="round"/></g>
+      </svg>
+    </div></div>
+  </div>
+
+  <div class="txt up d1">
+    <h1>¡Ho, ho, ho!<br>¡Tu carta llegó al Polo Norte!</h1>
+    <p>Los duendes ya están preparando todo para que Santa pueda leer tu carta. Muy pronto recibirás una sorpresa especial directamente en tu hogar.</p>
+    <p class="suena">¡Sigue soñando en grande!</p>
+  </div>
+
+  <section class="estado up d2" aria-live="polite">
+    <div class="cab">
+      <p class="k">Orden</p>
+      <p class="num" id="num">…</p>
+    </div>
+    <ol>
+      <li id="s1"><span class="marca"></span>Pedido recibido y pagado</li>
+      <li id="s2"><span class="marca"></span>Los duendes preparan la respuesta</li>
+      <li id="s3"><span class="marca"></span>Sale del Polo Norte por correo</li>
+    </ol>
+    <p class="nota" id="nota">Enviamos la confirmación al correo del adulto. Te avisaremos cuando la carta salga.</p>
+  </section>
+
+  <a class="volver up d3" href="index.html">Volver al inicio</a>
+</main>
+
+<script src="js/config.js"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var id = new URLSearchParams(location.search).get('order');
+  var CHECK = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4.5 4.5L19 7"/></svg>';
+
+  function mark(li, state) {
+    li.className = state;
+    li.querySelector('.marca').innerHTML = state === 'hecho' ? CHECK : '';
+  }
+
+  // Nunca decimos que la carta salió si el estado no es "mailed" o posterior.
+  function paint(o) {
+    $('num').textContent = o.orderNumber ? '#' + o.orderNumber : '—';
+    var s = o.status;
+    if (s === 'pending_payment') {
+      mark($('s1'), 'activo'); mark($('s2'), ''); mark($('s3'), '');
+      $('nota').textContent = 'Estamos confirmando el pago con el banco. Esto toma unos segundos.';
+    } else if (s === 'mailed' || s === 'delivered') {
+      mark($('s1'), 'hecho'); mark($('s2'), 'hecho'); mark($('s3'), 'hecho');
+      $('nota').textContent = s === 'delivered' ? '¡El correo dice que la carta ya llegó!' : (o.expectedDelivery ? 'Llegada estimada: ' + CPS.longDate(o.expectedDelivery) + '.' : 'La carta ya va en camino.');
+    } else if (s === 'cancelled' || s === 'refunded') {
+      mark($('s1'), ''); mark($('s2'), ''); mark($('s3'), '');
+      $('nota').innerHTML = 'Este pedido fue ' + (s === 'refunded' ? 'reembolsado' : 'cancelado') + '. Si tienes preguntas, escríbenos a <a href="mailto:' + CPS.CONTACT_EMAIL + '" style="color:#B3261E">' + CPS.CONTACT_EMAIL + '</a>.';
+    } else {
+      mark($('s1'), 'hecho'); mark($('s2'), 'activo'); mark($('s3'), '');
+    }
+  }
+
+  if (!id || !/^[0-9a-f-]{20,}$/i.test(id)) {
+    $('num').textContent = '—';
+    mark($('s1'), 'hecho'); mark($('s2'), 'activo');
+    return;
+  }
+
+  var tries = 0;
+  function load() {
+    fetch(CPS.BACKEND_URL + '/api/order/' + encodeURIComponent(id))
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (o) {
+        // Pedido válido: la carta ya está en el Polo Norte, se borra el borrador de este dispositivo.
+        CPS.clearDraft();
+        try { sessionStorage.removeItem('cps_envio'); } catch (e) {}
+        paint(o);
+        // El aviso de Stripe puede tardar unos segundos en llegar al backend.
+        if (o.status === 'pending_payment' && tries++ < 10) setTimeout(load, 3000);
+      })
+      .catch(function () {
+        $('num').textContent = '—';
+        mark($('s1'), 'hecho'); mark($('s2'), 'activo');
+        $('nota').innerHTML = 'No pudimos consultar el pedido ahora mismo, pero si pagaste ya está en camino al taller. Revisa tu correo o escríbenos a <a href="mailto:' + CPS.CONTACT_EMAIL + '" style="color:#B3261E">' + CPS.CONTACT_EMAIL + '</a>.';
+      });
+  }
+  mark($('s1'), 'hecho'); mark($('s2'), 'activo');
+  load();
+})();
+</script>
+</body>
+</html>

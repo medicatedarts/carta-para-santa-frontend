@@ -107,6 +107,8 @@ Comportamiento común:
 
 Implementación sugerida: `js/papel.js` con `renderPapel(contenedor, design, contenido, { mini })` que arma el HTML del papel.
 
+> **Implementado (9 nov 2026):** para que la vista previa sea idéntica a la impresión, `js/papel.js` usa los mismos fondos JPG que imprime Lob (`assets/papeles/`, versión web de `papeles/fondos/` del backend), la misma caja de texto (`layout.json`) y el mismo cálculo de letra y renglones que `printTemplate.js`. La hoja es de tamaño carta fijo (la letra se ajusta al contenido) en lugar de un papel que crece.
+
 ## 5. Compra (`enviar.html`)
 
 Prototipo: `docs/prototipo/Checkout.dc.html`.

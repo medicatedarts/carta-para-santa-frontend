@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Envío y pago · CartaParaSanta.com</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0F3324">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/base.css">
+<style>
+  body { background: #F6F2E9; }
+  .seguro { margin: 0; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 800; color: var(--gris-verde); }
+  main.compra { padding-top: 24px; padding-bottom: 64px; max-width: 1160px; }
+  .volver { display: inline-flex; align-items: center; gap: 6px; font-weight: 800; font-size: 15px; text-decoration: none; min-height: 44px; }
+  h1 { margin: 6px 0 6px; font-family: 'Fraunces', serif; font-weight: 700; font-size: clamp(30px, 5vw, 38px); line-height: 1.1; color: var(--pino); }
+  .lead { margin: 0 0 24px; font-size: 17px; color: var(--texto-2); }
+  .cols { display: flex; flex-wrap: wrap; gap: 24px 28px; align-items: flex-start; }
+  form.datos { flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 18px; }
+  fieldset { margin: 0; border: 1px solid #E6DCC6; background: #FFFFFF; border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  @media (min-width: 700px) { fieldset { padding: 24px; } }
+  legend { padding: 0 8px; font-weight: 800; font-size: 18px; color: var(--pino); }
+  .campo { font-weight: 800; font-size: 14px; color: var(--texto); }
+  .campo input, .campo select { font-size: 16px; border-width: 1.5px; border-color: #D9CDB2; border-radius: 10px; }
+  .nota { margin: 0; font-size: 13px; color: var(--texto-3); }
+  .verif { margin: 0; display: flex; gap: 8px; align-items: flex-start; font-size: 13px; color: var(--verde); font-weight: 800; }
+  .verif svg { flex: none; margin-top: 1px; }
+  .consent { display: flex; gap: 12px; align-items: flex-start; background: #FFFFFF; border: 1px solid #E6DCC6; border-radius: 14px; padding: 16px; font-size: 15px; line-height: 1.5; color: #3B4540; cursor: pointer; }
+  .consent input { width: 24px; height: 24px; margin: 0; accent-color: var(--verde); flex: none; }
+  .consent.invalida { border-color: var(--rojo); }
+
+  aside.pedido { flex: 1 1 340px; min-width: 0; background: #FFFFFF; border: 1px solid #E6DCC6; border-radius: 20px; padding: 22px; display: flex; flex-direction: column; gap: 18px; }
+  @media (min-width: 960px) { aside.pedido { position: sticky; top: 16px; } }
+  aside h2 { margin: 0; font-size: 20px; font-weight: 800; color: var(--pino); }
+  .mini { display: flex; gap: 16px; align-items: flex-start; }
+  .mini .pp-holder { flex: none; width: 110px; }
+  .mini .pp { box-shadow: 0 4px 10px rgba(15,51,36,0.15); }
+  .mini p { margin: 0; }
+  .mini .n { font-weight: 800; font-size: 16px; }
+  .mini .d { font-size: 14px; color: var(--texto-3); margin-top: 4px; }
+  .mini a { display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; font-weight: 800; }
+  .incluye { background: var(--crema); border-radius: 12px; padding: 14px 16px; font-size: 14px; line-height: 1.6; color: #3B4540; }
+  .incluye b { display: block; color: var(--pino); margin-bottom: 4px; }
+  dl.total { margin: 0; display: grid; grid-template-columns: 1fr auto; row-gap: 10px; font-size: 15px; }
+  dl.total dt { color: var(--texto-2); }
+  dl.total dd { margin: 0; font-weight: 800; text-align: right; }
+  dl.total .t { padding-top: 12px; border-top: 1px solid var(--borde); font-weight: 800; font-size: 17px; color: var(--pino); }
+  .pagar { width: 100%; min-height: 58px; font-size: 18px; padding: 0 18px; text-align: center; }
+  .pie { margin: 0; text-align: center; font-size: 13px; color: var(--texto-3); }
+  .err-acciones { margin-top: 10px; }
+  .err-acciones a { font-weight: 800; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="index.html" aria-label="CartaParaSanta.com, inicio">
+      <svg width="30" height="30" viewBox="0 0 34 34" aria-hidden="true"><rect x="3" y="8" width="28" height="19" rx="3" fill="#FBF7EF"/><path d="M3 10 L17 20 L31 10" fill="none" stroke="#B3261E" stroke-width="2.4"/><circle cx="17" cy="20" r="4" fill="#C9A24A"/></svg>
+      <span>CartaParaSanta<b>.com</b></span>
+    </a>
+    <p class="seguro">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E2C27A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      Pago seguro · Sección para adultos
+    </p>
+  </div>
+</header>
+
+<main class="wrap compra">
+  <a class="volver" href="carta.html">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Volver a la carta</a>
+  <h1>Envío y pago</h1>
+  <p class="lead">Revisa la carta y dinos a dónde enviar la respuesta de Santa.</p>
+
+  <div class="aviso aviso-info" id="cancelado" role="status" hidden style="margin-bottom:18px">No se completó el pago. Tu carta sigue guardada; puedes intentarlo de nuevo cuando quieras.</div>
+  <div class="aviso aviso-info" id="cerrado" role="status" hidden style="margin-bottom:18px">El buzón del Polo Norte cerró por este año. ¡Gracias por escribirle a Santa!</div>
+
+  <div class="cols">
+    <form class="datos" id="form" novalidate>
+      <fieldset>
+        <legend>1. Adulto responsable</legend>
+        <div class="fila">
+          <label class="campo">Nombre completo
+            <input type="text" name="buyerName" autocomplete="name" maxlength="80" placeholder="Nombre y apellidos" required>
+          </label>
+          <label class="campo">Correo electrónico
+            <input type="email" name="buyerEmail" autocomplete="email" maxlength="120" placeholder="tu@correo.com" inputmode="email" required>
+          </label>
+        </div>
+        <p class="nota">Te enviaremos la confirmación y el número de orden a este correo.</p>
+      </fieldset>
+
+      <fieldset id="fs-dir">
+        <legend>2. ¿A dónde enviamos la carta de Santa?</legend>
+        <label class="campo">Nombre en el sobre
+          <input type="text" name="shipName" autocomplete="off" maxlength="60" placeholder="Ej.: Sofía Rivera" required>
+        </label>
+        <label class="campo">Dirección (línea 1)
+          <input type="text" name="line1" autocomplete="address-line1" maxlength="64" placeholder="Calle, número, urbanización" required>
+        </label>
+        <label class="campo"><span>Dirección (línea 2) <span class="opc">(opcional)</span></span>
+          <input type="text" name="line2" autocomplete="address-line2" maxlength="64" placeholder="Apartamento, buzón, edificio">
+        </label>
+        <div class="fila">
+          <label class="campo" style="flex:2 1 200px">Ciudad o pueblo
+            <input type="text" name="city" autocomplete="address-level2" maxlength="40" required>
+          </label>
+          <label class="campo" style="flex:1 1 150px">Estado o territorio
+            <select name="state" autocomplete="address-level1" id="state" required></select>
+          </label>
+          <label class="campo" style="flex:1 1 120px">Código postal
+            <input type="text" name="zip" inputmode="numeric" autocomplete="postal-code" maxlength="10" placeholder="00612" required>
+          </label>
+        </div>
+        <p class="verif">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4.5 4.5L19 7"/></svg>
+          Verificamos la dirección con el servicio postal antes de cobrar.</p>
+        <div class="aviso aviso-error" id="error-dir" role="alert" hidden></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>3. Pago</legend>
+        <p class="nota" style="font-size:15px;color:var(--texto-2)">Al tocar <strong>Pagar</strong> pasarás a la página segura de Stripe para poner los datos de la tarjeta. Luego volverás aquí con la confirmación.</p>
+        <p class="nota">Los datos de la tarjeta los procesa Stripe. CartaParaSanta.com nunca los ve ni los guarda.</p>
+      </fieldset>
+
+      <label class="consent" id="consent-box">
+        <input type="checkbox" name="consent" id="consent" required>
+        <span>Soy mayor de edad y padre, madre o tutor del niño o niña (o tengo su permiso). Acepto los <a href="terminos.html" target="_blank" rel="noopener">Términos de servicio</a> y la <a href="privacidad.html" target="_blank" rel="noopener">Política de privacidad</a>.</span>
+      </label>
+    </form>
+
+    <aside class="pedido" aria-label="Resumen del pedido">
+      <h2>Tu pedido</h2>
+      <div class="mini">
+        <div class="pp-holder" id="mini-papel" role="img" aria-label="Tu carta"></div>
+        <div>
+          <p class="n" id="r-titulo">Tu carta a Santa</p>
+          <p class="d" id="r-diseno"></p>
+          <p class="d" id="r-regalos"></p>
+          <a href="carta.html">Ver o editar la carta</a>
+        </div>
+      </div>
+      <div class="incluye"><b>Incluye</b>Respuesta personalizada de Santa · Copia impresa de la carta original · Envío por correo postal</div>
+      <dl class="total">
+        <dt>Carta de Santa</dt><dd class="js-precio">—</dd>
+        <dt>Envío postal</dt><dd>Incluido</dd>
+        <dt>Impuestos (IVU)</dt><dd id="r-ivu">Incluido</dd>
+        <dt class="t">Total</dt><dd class="t js-precio">—</dd>
+      </dl>
+      <div class="aviso aviso-error" id="error" role="alert" hidden></div>
+      <button type="submit" form="form" class="btn btn-rojo pagar" id="pagar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        <span id="pagar-txt">Pagar y enviar al Polo Norte</span>
+      </button>
+      <p class="pie" id="pie">Llega en 4 a 7 días hábiles</p>
+    </aside>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="marca">CartaParaSanta<b>.com</b></p>
+    <nav aria-label="Enlaces legales">
+      <a href="mailto:hola@cartaparasanta.com">hola@cartaparasanta.com</a>
+      <a href="privacidad.html">Privacidad</a>
+      <a href="terminos.html">Términos de servicio</a>
+      <a href="reembolsos.html">Reembolsos</a>
+    </nav>
+    <p class="legal">© 2026 CartaParaSanta.com · Angel G. Rivera Lacomba · Urb. Victor Rojas 1, 500 Calle Adjuntas, Arecibo, PR 00612</p>
+  </div>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/papel.js"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var draft = CPS.loadDraft();
+  // Sin carta no hay nada que enviar.
+  if (!draft || (!String(draft.message || '').trim() && !(draft.gifts || []).length)) {
+    location.replace('carta.html');
+    return;
+  }
+
+  var params = new URLSearchParams(location.search);
+  if (params.get('cancelado')) $('cancelado').hidden = false;
+
+  // ---------- Estados (Puerto Rico primero) ----------
+  var STATES = [['PR', 'Puerto Rico'], ['', '──────────'],
+    ['AL', 'Alabama'], ['AK', 'Alaska'], ['AZ', 'Arizona'], ['AR', 'Arkansas'], ['CA', 'California'], ['CO', 'Colorado'], ['CT', 'Connecticut'], ['DE', 'Delaware'], ['DC', 'Distrito de Columbia'], ['FL', 'Florida'], ['GA', 'Georgia'], ['HI', 'Hawái'], ['ID', 'Idaho'], ['IL', 'Illinois'], ['IN', 'Indiana'], ['IA', 'Iowa'], ['KS', 'Kansas'], ['KY', 'Kentucky'], ['LA', 'Luisiana'], ['ME', 'Maine'], ['MD', 'Maryland'], ['MA', 'Massachusetts'], ['MI', 'Míchigan'], ['MN', 'Minnesota'], ['MS', 'Misisipi'], ['MO', 'Misuri'], ['MT', 'Montana'], ['NE', 'Nebraska'], ['NV', 'Nevada'], ['NH', 'Nuevo Hampshire'], ['NJ', 'Nueva Jersey'], ['NM', 'Nuevo México'], ['NY', 'Nueva York'], ['NC', 'Carolina del Norte'], ['ND', 'Dakota del Norte'], ['OH', 'Ohio'], ['OK', 'Oklahoma'], ['OR', 'Oregón'], ['PA', 'Pensilvania'], ['RI', 'Rhode Island'], ['SC', 'Carolina del Sur'], ['SD', 'Dakota del Sur'], ['TN', 'Tennessee'], ['TX', 'Texas'], ['UT', 'Utah'], ['VT', 'Vermont'], ['VA', 'Virginia'], ['WA', 'Washington'], ['WV', 'Virginia Occidental'], ['WI', 'Wisconsin'], ['WY', 'Wyoming'],
+    ['', '──────────'], ['VI', 'Islas Vírgenes de EE. UU.'], ['GU', 'Guam'], ['AS', 'Samoa Americana'], ['MP', 'Islas Marianas del Norte']];
+  var sel = $('state');
+  STATES.forEach(function (s) {
+    var o = document.createElement('option');
+    o.value = s[0]; o.textContent = s[1];
+    if (!s[0]) o.disabled = true;
+    sel.appendChild(o);
+  });
+
+  // ---------- Datos del adulto: solo en esta pestaña (por si vuelve de Stripe sin pagar) ----------
+  var form = $('form');
+  var KEY = 'cps_envio';
+  try {
+    var saved = JSON.parse(sessionStorage.getItem(KEY) || '{}');
+    Object.keys(saved).forEach(function (k) { if (form.elements[k] && k !== 'consent') form.elements[k].value = saved[k]; });
+  } catch (e) {}
+  form.addEventListener('input', function (e) {
+    var data = {};
+    ['buyerName', 'buyerEmail', 'shipName', 'line1', 'line2', 'city', 'state', 'zip'].forEach(function (k) { data[k] = form.elements[k].value; });
+    try { sessionStorage.setItem(KEY, JSON.stringify(data)); } catch (err) {}
+    if (e.target.getAttribute('aria-invalid')) e.target.removeAttribute('aria-invalid');
+    if (e.target.name === 'consent') $('consent-box').classList.remove('invalida');
+  });
+  if (!form.elements.shipName.value && draft.childName) form.elements.shipName.value = draft.childName;
+
+  // ---------- Resumen ----------
+  renderPapel($('mini-papel'), {
+    design: draft.design, greeting: draft.greeting, intro: CPS.introLine(draft.childName, draft.childAge),
+    message: draft.message, gifts: draft.gifts, farewell: draft.farewell, signature: draft.signature || draft.childName
+  });
+  $('r-titulo').textContent = draft.childName ? 'Carta de ' + draft.childName : 'Tu carta a Santa';
+  $('r-diseno').textContent = 'Diseño: ' + CPS.designName(draft.design);
+  var ng = (draft.gifts || []).length;
+  $('r-regalos').textContent = ng === 1 ? '1 regalo en la lista' : ng ? ng + ' regalos en la lista' : 'Sin lista de regalos';
+
+  var cfg = null;
+  CPS.getConfig().then(function (c) {
+    cfg = c;
+    if (!c) return;
+    var price = CPS.money(c.priceCents, c.currency);
+    document.querySelectorAll('.js-precio').forEach(function (el) { el.textContent = price; });
+    $('pagar-txt').textContent = 'Pagar ' + price + ' y enviar al Polo Norte';
+    if (c.taxMode !== 'included') $('r-ivu').textContent = 'Se calcula al pagar';
+    var pie = 'Llega en ' + CPS.DELIVERY_TEXT;
+    if (c.deadlineRecommended) pie += ' · Pide antes del ' + CPS.longDate(c.deadlineRecommended) + ' para Navidad';
+    $('pie').textContent = pie;
+    if (c.mailboxOpen === false) {
+      $('cerrado').hidden = false;
+      $('pagar').disabled = true;
+    }
+  });
+
+  // ---------- Envío ----------
+  function showError(msg, opts) {
+    opts = opts || {};
+    var box = opts.address ? $('error-dir') : $('error');
+    box.innerHTML = '';
+    box.appendChild(document.createTextNode(msg));
+    if (opts.back) {
+      var p = document.createElement('p');
+      p.className = 'err-acciones';
+      p.innerHTML = '<a href="carta.html">Volver a la carta para cambiarla</a>';
+      box.appendChild(p);
+    }
+    box.hidden = false;
+    box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  function clearErrors() {
+    $('error').hidden = true;
+    $('error-dir').hidden = true;
+  }
+
+  function localCheck() {
+    var f = form.elements;
+    var checks = [
+      [f.buyerName, function (v) { return v.trim(); }, 'Escribe el nombre del adulto responsable.'],
+      [f.buyerEmail, function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()); }, 'Revisa el correo electrónico.'],
+      [f.shipName, function (v) { return v.trim(); }, 'Escribe el nombre que va en el sobre.'],
+      [f.line1, function (v) { return v.trim(); }, 'Escribe la dirección.'],
+      [f.city, function (v) { return v.trim(); }, 'Escribe la ciudad o el pueblo.'],
+      [f.state, function (v) { return v; }, 'Escoge el estado o territorio.'],
+      [f.zip, function (v) { return /^\d{5}(-\d{4})?$/.test(v.trim()); }, 'El código postal debe tener 5 dígitos.']
+    ];
+    for (var i = 0; i < checks.length; i++) {
+      if (!checks[i][1](checks[i][0].value)) {
+        checks[i][0].setAttribute('aria-invalid', 'true');
+        checks[i][0].focus();
+        return checks[i][2];
+      }
+    }
+    if (!f.consent.checked) {
+      $('consent-box').classList.add('invalida');
+      f.consent.focus();
+      return 'Falta confirmar que eres el adulto responsable y aceptar los términos y la privacidad.';
+    }
+    return null;
+  }
+
+  var sending = false;
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (sending) return;
+    clearErrors();
+    var problem = localCheck();
+    if (problem) { showError(problem); return; }
+
+    var f = form.elements;
+    var body = {
+      letter: {
+        design: draft.design, greeting: draft.greeting, childName: draft.childName,
+        childAge: draft.childAge === '' ? null : Number(draft.childAge),
+        message: draft.message, gifts: draft.gifts, farewell: draft.farewell, signature: draft.signature
+      },
+      buyer: { name: f.buyerName.value.trim(), email: f.buyerEmail.value.trim() },
+      shipTo: { name: f.shipName.value.trim(), line1: f.line1.value.trim(), line2: f.line2.value.trim(), city: f.city.value.trim(), state: f.state.value, zip: f.zip.value.trim(), country: 'US' },
+      consent: { isParentOrAuthorized: true, acceptedTerms: true, acceptedPrivacy: true }
+    };
+
+    sending = true;
+    var btn = $('pagar');
+    var label = $('pagar-txt').textContent;
+    btn.disabled = true;
+    $('pagar-txt').textContent = 'Verificando la dirección…';
+
+    fetch(CPS.BACKEND_URL + '/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (res) {
+        if (res.ok && res.j.checkoutUrl) {
+          $('pagar-txt').textContent = 'Abriendo el pago seguro…';
+          window.location = res.j.checkoutUrl;
+          return;
+        }
+        var j = res.j || {};
+        var msg = j.error || 'No se pudo preparar el pago. Inténtalo de nuevo en unos minutos.';
+        if (j.code === 'content_policy') showError(msg, { back: true });
+        else if (j.field === 'shipTo' || /^address/.test(j.code || '')) showError(msg, { address: true });
+        else showError(msg);
+        done();
+      })
+      .catch(function () {
+        showError('No pudimos conectar con el Polo Norte. Revisa tu conexión e inténtalo de nuevo.');
+        done();
+      });
+
+    function done() {
+      sending = false;
+      btn.disabled = !!(cfg && cfg.mailboxOpen === false);
+      $('pagar-txt').textContent = label;
+    }
+  });
+})();
+</script>
+</body>
+</html>
