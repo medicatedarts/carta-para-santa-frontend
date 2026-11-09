@@ -54,6 +54,11 @@
   .msg { margin: 10px 0 0; }
   .vacio { color: var(--texto-3); padding: 20px 0; text-align: center; }
   .sec { margin-top: 18px; }
+  .chk { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; font-size: 14px; }
+  .chk li { display: grid; grid-template-columns: 26px 170px 1fr; gap: 8px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid #F0E8D6; }
+  .chk .g { font-size: 12px; font-weight: 800; color: var(--texto-3); text-transform: uppercase; letter-spacing: .05em; padding-top: 10px; border: 0; display: block; }
+  .chk b { color: var(--pino); }
+  .chk span.d { color: var(--texto-2); overflow-wrap: anywhere; }
 </style>
 </head>
 <body>
@@ -78,6 +83,13 @@
   </form>
 
   <div id="app" hidden>
+    <section class="card" style="margin-bottom:18px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+        <h2 style="margin:0">Estado del sistema</h2>
+        <button class="btn btn-borde" id="btn-check" type="button" style="min-height:40px;font-size:14px">Revisar configuración</button>
+      </div>
+      <div id="check"></div>
+    </section>
     <div class="tabs" role="tablist" id="tabs"></div>
     <div class="cols">
       <section class="card">
@@ -348,6 +360,23 @@
     h += '<tr><th>Total</th><th>' + tot.n + '</th><th>' + money(tot.c) + '</th></tr></tbody></table>';
     $('totales').innerHTML = h;
   }
+
+  // ---------- Estado del sistema ----------
+  function runCheck() {
+    $('check').innerHTML = '<p class="vacio">Revisando…</p>';
+    api('/check').then(function (r) {
+      var icon = { ok: '✅', warn: '⚠️', error: '❌' };
+      var h = '<div class="aviso ' + (r.allLive ? 'aviso-ok' : 'aviso-info') + '" style="margin-top:12px">' +
+        (r.allLive ? 'Todo en Live y sin errores: listo para la prueba real.' : 'Revisa los puntos marcados con ❌ o ⚠️ antes de la prueba real.') + '</div><ul class="chk">';
+      var last = '';
+      r.items.forEach(function (i) {
+        if (i.group !== last) { h += '<li class="g">' + esc(i.group) + '</li>'; last = i.group; }
+        h += '<li><span>' + icon[i.status] + '</span><b>' + esc(i.label) + '</b><span class="d">' + esc(i.detail) + '</span></li>';
+      });
+      $('check').innerHTML = h + '</ul>';
+    }).catch(function (err) { $('check').innerHTML = '<div class="aviso aviso-error" style="margin-top:12px">' + esc(err.message) + '</div>'; });
+  }
+  $('btn-check').addEventListener('click', runCheck);
 
   if (token) api('/stats').then(start).catch(logout); else logout();
 })();
