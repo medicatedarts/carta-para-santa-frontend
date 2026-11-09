@@ -81,7 +81,7 @@
   .ventana { position: absolute; border: 1.5px solid #D5DCD8; border-radius: 3px; background: #F7F9F8; box-sizing: border-box; line-height: 1.35; color: var(--texto-2); }
 
   .disenos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 16px; margin-top: 40px; }
-  @media (min-width: 700px) { .disenos { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 28px; } }
+  @media (min-width: 700px) { .disenos { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; } }
   .diseno { display: flex; flex-direction: column; gap: 12px; align-items: center; text-align: center; }
   .diseno .pp { width: 100%; max-width: 200px; box-shadow: 0 10px 24px rgba(15,51,36,0.16); }
   .diseno p { margin: 0; }
@@ -189,7 +189,7 @@
     <div class="paso">
       <div class="num" style="background:#FBE9E7;color:#B3261E">1</div>
       <h3>Elige tu diseño</h3>
-      <p>Cinco papeles mágicos: correo aéreo, taller de los duendes, noche de estrellas, cielo del Polo Norte o juguetes en acuarela.</p>
+      <p>Ocho papeles mágicos para escoger: correo aéreo, taller de los duendes, cascanueces, dulces navideños y muchos más.</p>
     </div>
     <div class="paso">
       <div class="num" style="background:#E6F0EA;color:#1F6B47">2</div>
@@ -240,7 +240,7 @@
 </section>
 
 <section class="wrap seccion" id="disenos">
-  <p class="kicker">Cinco cartas mágicas</p>
+  <p class="kicker">Ocho cartas mágicas</p>
   <h2 class="titulo">¿Cuál será tu favorita?</h2>
   <div class="disenos" id="disenos-lista"></div>
   <div style="text-align:center;margin-top:40px">
@@ -324,7 +324,7 @@
 <script src="js/papel.js"></script>
 <script>
   (function () {
-    // Miniaturas de los 5 papeles: las mismas imágenes que se imprimen.
+    // Miniaturas de los papeles: las mismas imágenes que se imprimen.
     var lista = document.getElementById('disenos-lista');
     CPS.DESIGNS.forEach(function (d) {
       var el = document.createElement('div');

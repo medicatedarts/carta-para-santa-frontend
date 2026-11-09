@@ -86,7 +86,7 @@ Línea automática de presentación en la carta: "Me llamo {nombre} y tengo {eda
 | Despedida | 40 |
 | Firma | 30 |
 
-## 4. Los 5 papeles de carta
+## 4. Los papeles de carta (8 desde el 9 nov 2026; lista en `js/config.js`)
 
 Prototipo: `docs/prototipo/LetterArt.dc.html`. Es un solo componente con el parámetro `design`. Se usa en la vista previa del generador, en las miniaturas del paso 1, en la landing y en el resumen de compra (en ese último el prototipo aún tiene el estilo anterior: usar este componente).
 
@@ -161,7 +161,7 @@ Prototipo: `docs/prototipo/Confirm.dc.html` (pantalla de móvil 390 × 844; en e
 
 - [ ] Generador completo en iPhone Safari y Android Chrome.
 - [ ] Recargar a mitad del generador: el borrador se recupera.
-- [ ] Los 5 papeles con texto al máximo: nada se sale ni se encima.
+- [ ] Todos los papeles con texto al máximo: nada se sale ni se encima.
 - [ ] Teclado: todo se puede usar con Tab y Enter.
 - [ ] `prefers-reduced-motion`: nada se anima.
 - [ ] Buzón cerrado: la landing y el generador lo indican y no dejan pagar.

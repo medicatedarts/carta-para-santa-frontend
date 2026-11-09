@@ -17,7 +17,7 @@ Sitio estático (HTML + CSS + JavaScript sin framework, igual que `te-lo-dije-fr
 | `gracias.html` | Confirmación animada ("¡Tu carta llegó al Polo Norte!") |
 | `privacidad.html`, `terminos.html`, `reembolsos.html` | Páginas legales (se adaptan de Yo Te Lo Dije) |
 | `admin.html` | Panel privado (pide el `ADMIN_TOKEN`, no se enlaza desde el sitio) |
-| `assets/papeles/` | Fondos JPG de los 5 papeles (versión web de `papeles/fondos/` del backend) y `layout.json` con la caja de texto de cada uno |
+| `assets/papeles/` | Fondos JPG de los papeles (versión web de `papeles/fondos/` del backend) y `layout.json` con la caja de texto de cada uno |
 | `assets/logo-taller.png` | Logo "El Taller del Polo Norte" |
 | `assets/fonts/` | woff2 de Fraunces, Nunito, Patrick Hand y Pinyon Script |
 | `js/config.js` | `BACKEND_URL` y constantes compartidas |

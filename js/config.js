@@ -17,7 +17,10 @@
       { id: 'taller', name: 'Taller de los duendes', blurb: 'Madera, guirnaldas y lucecitas' },
       { id: 'estrellas', name: 'Noche de estrellas', blurb: 'Pingüinos, galletas y estrellas' },
       { id: 'polonorte', name: 'Cielo del Polo Norte', blurb: 'Adornos colgantes y nieve' },
-      { id: 'juguetes', name: 'Juguetes en acuarela', blurb: 'Juguetes pintados a mano' }
+      { id: 'juguetes', name: 'Juguetes en acuarela', blurb: 'Juguetes pintados a mano' },
+      { id: 'duendes', name: 'Duendes y renos', blurb: 'Duendes traviesos, renos y luces' },
+      { id: 'dulces', name: 'Dulces navideños', blurb: 'Roscón, galletas y turrones' },
+      { id: 'cascanueces', name: 'El cascanueces', blurb: 'Soldaditos, tambores y bailarina' }
     ],
 
     LIMITS: { childName: 30, greeting: 40, message: 700, gifts: 12, gift: 60, farewell: 40, signature: 30, ageMin: 1, ageMax: 17 },

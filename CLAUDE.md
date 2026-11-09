@@ -7,5 +7,5 @@ Sitio estático de CartaParaSanta.com: HTML + CSS + JavaScript sin framework ni 
 - La experiencia móvil es la prioridad. Botones de al menos 44 px de alto, contraste AA, `prefers-reduced-motion` respetado.
 - Nada de la carta se envía al servidor hasta que el adulto pulsa "Pagar" en `enviar.html`. Mientras tanto vive en `localStorage`.
 - Los límites de validación deben coincidir con los del backend.
-- Los 5 diseños de papel (`assets/papeles/`) son copia de los del backend: si cambias uno, avisa para actualizar el otro repo.
+- Los diseños de papel (`assets/papeles/`) son copia de los del backend: si cambias uno, avisa para actualizar el otro repo.
 - Sin analítica que siga al usuario y sin cookies de terceros (el sitio está dirigido a niños).
