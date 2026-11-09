@@ -48,6 +48,15 @@
   dl.total dd { margin: 0; font-weight: 800; text-align: right; }
   dl.total .t { padding-top: 12px; border-top: 1px solid var(--borde); font-weight: 800; font-size: 17px; color: var(--pino); }
   .pagar { width: 100%; min-height: 58px; font-size: 18px; padding: 0 18px; text-align: center; }
+  details.codigo summary { cursor: pointer; font-weight: 800; font-size: 15px; color: var(--rojo); min-height: 44px; display: flex; align-items: center; }
+  details.codigo .fila-codigo { display: flex; gap: 8px; margin-top: 4px; }
+  details.codigo input { flex: 1; min-width: 0; font-size: 16px; padding: 10px 12px; border: 1.5px solid #D9CDB2; border-radius: 10px; min-height: 46px; text-transform: uppercase; }
+  details.codigo input:focus { outline: 3px solid var(--dorado-claro); outline-offset: 1px; border-color: var(--dorado); }
+  details.codigo .btn { min-height: 46px; padding: 0 16px; font-size: 15px; border-radius: 10px; }
+  .codigo-msg { margin: 8px 0 0; font-size: 14px; font-weight: 800; }
+  .codigo-msg.ok { color: var(--verde); }
+  .codigo-msg.err { color: #7A1610; }
+  dl.total .desc { color: var(--verde); }
   .pie { margin: 0; text-align: center; font-size: 13px; color: var(--texto-3); }
   .err-acciones { margin-top: 10px; }
   .err-acciones a { font-weight: 800; }
@@ -123,8 +132,7 @@
       <fieldset>
         <legend><span class="n" aria-hidden="true">3</span>Pago</legend>
         <p class="nota" style="font-size:15px;color:var(--texto-2)">Al tocar <strong>Pagar</strong> pasarás a la página segura de Stripe para poner los datos de la tarjeta. Luego volverás aquí con la confirmación.</p>
-        <p class="nota" style="font-size:15px;color:var(--texto-2)">¿Tienes un código de descuento? Escríbelo en la página de pago de Stripe, en <strong>“Añadir código promocional”</strong>.</p>
-        <p class="nota">Los datos de la tarjeta los procesa Stripe. CartaParaSanta.com nunca los ve ni los guarda.</p>
+                <p class="nota">Los datos de la tarjeta los procesa Stripe. CartaParaSanta.com nunca los ve ni los guarda.</p>
       </fieldset>
 
       <label class="consent" id="consent-box">
@@ -145,11 +153,21 @@
         </div>
       </div>
       <div class="incluye"><b>Incluye</b>Respuesta personalizada de Santa · Copia impresa de la carta original · Envío por correo postal</div>
+      <details class="codigo" id="codigo-box">
+        <summary>¿Tienes un código de descuento?</summary>
+        <div class="fila-codigo">
+          <label for="codigo" class="sr-only">Código de descuento</label>
+          <input id="codigo" type="text" maxlength="40" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="CÓDIGO">
+          <button type="button" class="btn btn-borde" id="btn-codigo">Aplicar</button>
+        </div>
+        <p class="codigo-msg" id="codigo-msg" role="status" hidden></p>
+      </details>
       <dl class="total">
         <dt>Carta de Santa</dt><dd class="js-precio">—</dd>
+        <dt class="desc" id="r-desc-k" hidden>Descuento</dt><dd class="desc" id="r-desc" hidden></dd>
         <dt>Envío postal</dt><dd>Incluido</dd>
         <dt>Impuestos (IVU)</dt><dd id="r-ivu">Incluido</dd>
-        <dt class="t">Total</dt><dd class="t js-precio">—</dd>
+        <dt class="t">Total</dt><dd class="t" id="r-total">—</dd>
       </dl>
       <div class="aviso aviso-error" id="error" role="alert" hidden></div>
       <button type="submit" form="form" class="btn btn-rojo pagar" id="pagar">
@@ -233,7 +251,7 @@
     if (!c) return;
     var price = CPS.money(c.priceCents, c.currency);
     document.querySelectorAll('.js-precio').forEach(function (el) { el.textContent = price; });
-    $('pagar-txt').textContent = 'Pagar ' + price + ' y enviar al Polo Norte';
+    paintTotal();
     if (c.taxMode !== 'included') $('r-ivu').textContent = 'Se calcula al pagar';
     var pie = 'Llega en ' + CPS.DELIVERY_TEXT;
     if (c.deadlineRecommended) pie += ' · Pide antes del ' + CPS.longDate(c.deadlineRecommended) + ' para Navidad';
@@ -243,6 +261,47 @@
       $('pagar').disabled = true;
     }
   });
+
+  // ---------- Código de descuento (se valida en el backend, con límite por correo) ----------
+  var promo = null; // { code, finalCents }
+  function paintTotal() {
+    if (!cfg) return;
+    var final = promo ? promo.finalCents : cfg.priceCents;
+    $('r-total').textContent = CPS.money(final, cfg.currency);
+    $('r-desc-k').hidden = $('r-desc').hidden = !promo;
+    if (promo) $('r-desc').textContent = '−' + CPS.money(cfg.priceCents - final, cfg.currency) + ' (' + promo.code + ')';
+    $('pagar-txt').textContent = final === 0 ? 'Enviar al Polo Norte (gratis)' : 'Pagar ' + CPS.money(final, cfg.currency) + ' y enviar al Polo Norte';
+  }
+  function codigoMsg(text, ok) {
+    var m = $('codigo-msg');
+    m.textContent = text; m.className = 'codigo-msg ' + (ok ? 'ok' : 'err'); m.hidden = false;
+  }
+  function applyCode() {
+    var code = $('codigo').value.trim();
+    if (!code) { promo = null; paintTotal(); $('codigo-msg').hidden = true; return; }
+    var email = form.elements.buyerEmail.value.trim();
+    if (!email) { codigoMsg('Escribe primero el correo del adulto (sección 1).', false); form.elements.buyerEmail.focus(); return; }
+    $('btn-codigo').disabled = true;
+    fetch(CPS.BACKEND_URL + '/api/promo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: code, email: email }) })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (res) {
+        if (res.ok) {
+          promo = { code: res.j.code, finalCents: res.j.finalCents };
+          codigoMsg(res.j.finalCents === 0 ? '¡Código aplicado! Esta carta es gratis.' : '¡Código aplicado!', true);
+        } else {
+          promo = null;
+          codigoMsg(res.j.error || 'Ese código no es válido.', false);
+        }
+        paintTotal();
+      })
+      .catch(function () { codigoMsg('No pudimos revisar el código. Inténtalo de nuevo.', false); })
+      .then(function () { $('btn-codigo').disabled = false; });
+  }
+  $('btn-codigo').addEventListener('click', applyCode);
+  $('codigo').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); applyCode(); } });
+  $('codigo').addEventListener('input', function () { if (promo) { promo = null; paintTotal(); $('codigo-msg').hidden = true; } });
+  // El límite es por correo: si cambia el correo, hay que volver a aplicar el código.
+  form.elements.buyerEmail.addEventListener('change', function () { if (promo) applyCode(); });
 
   // ---------- Envío ----------
   function showError(msg, opts) {
@@ -307,7 +366,8 @@
       },
       buyer: { name: f.buyerName.value.trim(), email: f.buyerEmail.value.trim() },
       shipTo: { name: f.shipName.value.trim(), line1: f.line1.value.trim(), line2: f.line2.value.trim(), city: f.city.value.trim(), state: f.state.value, zip: f.zip.value.trim(), country: 'US' },
-      consent: { isParentOrAuthorized: true, acceptedTerms: true, acceptedPrivacy: true }
+      consent: { isParentOrAuthorized: true, acceptedTerms: true, acceptedPrivacy: true },
+      promoCode: promo ? promo.code : ($('codigo').value.trim() || undefined)
     };
 
     sending = true;
@@ -326,7 +386,8 @@
         }
         var j = res.j || {};
         var msg = j.error || 'No se pudo preparar el pago. Inténtalo de nuevo en unos minutos.';
-        if (j.code === 'content_policy') showError(msg, { back: true });
+        if (j.field === 'promo') { promo = null; paintTotal(); $('codigo-box').open = true; codigoMsg(msg, false); showError(msg); }
+        else if (j.code === 'content_policy') showError(msg, { back: true });
         else if (j.field === 'shipTo' || /^address/.test(j.code || '')) showError(msg, { address: true });
         else showError(msg);
         done();
