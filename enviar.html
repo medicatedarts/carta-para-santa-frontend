@@ -17,11 +17,12 @@
   .lead { margin: 0 0 24px; font-size: 17px; color: var(--texto-2); }
   .cols { display: flex; flex-wrap: wrap; gap: 24px 28px; align-items: flex-start; }
   form.datos { flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 18px; }
-  fieldset { margin: 0; border: 1px solid #E6DCC6; background: #FFFFFF; border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
-  @media (min-width: 700px) { fieldset { padding: 24px; } }
-  /* El título va DENTRO de la caja (por defecto el legend se monta sobre el borde). */
-  legend { float: left; width: 100%; padding: 0 0 14px; margin: 0 0 2px; border-bottom: 1px solid #F0E8D6; display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 18px; line-height: 1.3; color: var(--pino); }
-  legend .n { flex: none; width: 32px; height: 32px; border-radius: 999px; background: var(--pino); color: var(--dorado-claro); display: inline-flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-size: 16px; }
+  .bloque { margin: 0; border: 1px solid #E6DCC6; background: #FFFFFF; border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  @media (min-width: 700px) { .bloque { padding: 24px; } }
+  /* Cajas con div + role="group" en vez de fieldset/legend: Safari monta el legend sobre el
+     borde aunque se le pida otra cosa, y así el título queda dentro de la caja en todos lados. */
+  .bloque h2 { padding: 0 0 14px; margin: 0 0 2px; border-bottom: 1px solid #F0E8D6; display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 18px; line-height: 1.3; color: var(--pino); }
+  .bloque h2 .n { flex: none; width: 32px; height: 32px; border-radius: 999px; background: var(--pino); color: var(--dorado-claro); display: inline-flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-size: 16px; }
   .campo { font-weight: 800; font-size: 14px; color: var(--texto); }
   .campo input, .campo select { font-size: 16px; border-width: 1.5px; border-color: #D9CDB2; border-radius: 10px; }
   .nota { margin: 0; font-size: 13px; color: var(--texto-3); }
@@ -88,8 +89,8 @@
 
   <div class="cols">
     <form class="datos" id="form" novalidate>
-      <fieldset>
-        <legend><span class="n" aria-hidden="true">1</span>Adulto responsable</legend>
+      <div class="bloque" role="group" aria-labelledby="t1">
+        <h2 id="t1"><span class="n" aria-hidden="true">1</span>Adulto responsable</h2>
         <div class="fila">
           <label class="campo">Nombre completo
             <input type="text" name="buyerName" autocomplete="name" maxlength="80" placeholder="Nombre y apellidos" required>
@@ -99,10 +100,10 @@
           </label>
         </div>
         <p class="nota">Te enviaremos la confirmación y el número de orden a este correo.</p>
-      </fieldset>
+      </div>
 
-      <fieldset id="fs-dir">
-        <legend><span class="n" aria-hidden="true">2</span>¿A dónde enviamos la carta de Santa?</legend>
+      <div class="bloque" role="group" aria-labelledby="t2" id="fs-dir">
+        <h2 id="t2"><span class="n" aria-hidden="true">2</span>¿A dónde enviamos la carta de Santa?</h2>
         <label class="campo">Nombre en el sobre
           <input type="text" name="shipName" autocomplete="off" maxlength="60" placeholder="Ej.: Sofía Rivera" required>
         </label>
@@ -127,13 +128,13 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4.5 4.5L19 7"/></svg>
           Verificamos la dirección con el servicio postal antes de cobrar.</p>
         <div class="aviso aviso-error" id="error-dir" role="alert" hidden></div>
-      </fieldset>
+      </div>
 
-      <fieldset>
-        <legend><span class="n" aria-hidden="true">3</span>Pago</legend>
+      <div class="bloque" role="group" aria-labelledby="t3">
+        <h2 id="t3"><span class="n" aria-hidden="true">3</span>Pago</h2>
         <p class="nota" style="font-size:15px;color:var(--texto-2)">Al tocar <strong>Pagar</strong> pasarás a la página segura de Stripe para poner los datos de la tarjeta. Luego volverás aquí con la confirmación.</p>
                 <p class="nota">Los datos de la tarjeta los procesa Stripe. CartaParaSanta.com nunca los ve ni los guarda.</p>
-      </fieldset>
+      </div>
 
       <label class="consent" id="consent-box">
         <input type="checkbox" name="consent" id="consent" required>
