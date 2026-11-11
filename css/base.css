@@ -43,9 +43,9 @@ button { cursor: pointer; }
 @media (min-width: 700px) { .wrap { padding-left: 32px; padding-right: 32px; } }
 
 /* ---------- Encabezado ---------- */
-.site-header { background: #B23A1A; color: var(--crema); } /* rojo teja vivo, como el papel de las cartas */
-.site-header .btn-rojo { background: #30855A; box-shadow: inset 0 0 0 2px rgba(255, 240, 215, 0.4); }
-.site-header .btn-rojo:hover { background: #286F4B; color: #FFFFFF; }
+.site-header { background: #A53328; color: var(--crema); } /* rojo teja vivo, como el papel de las cartas */
+.site-header .btn-rojo { background: #376A49; box-shadow: inset 0 0 0 2px rgba(255, 240, 215, 0.4); }
+.site-header .btn-rojo:hover { background: #2D583C; color: #FFFFFF; }
 /* Textos secundarios del encabezado más claros para que se lean bien sobre el rojo (contraste AA). */
 .site-header .paso-btn, .site-header .seguro { color: #F6EDE0; }
 .site-header .paso-btn.hecho { color: #FBE7B0; }
