@@ -20,6 +20,8 @@
 
 .capa { position: absolute; left: 0; right: 0; pointer-events: none; }
 .capa svg { display: block; width: 100%; height: 100%; }
+/* Cuando la ventana es ancha y baja, el SVG recorta arriba; así lo alto (el árbol grande, el humo) no se corta. */
+.capa-pueblo svg, .capa-vida svg { overflow: visible; }
 .capa-estrellas { top: 0; height: 60%; z-index: 1; }
 .capa-montes { bottom: 0; height: calc(var(--pueblo-h) * .55 + clamp(130px, 15vw, 230px)); z-index: 3; }
 .capa-pueblo, .capa-vida { bottom: 0; height: var(--pueblo-h); }
