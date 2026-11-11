@@ -1,0 +1,109 @@
+/* css/pueblo.css — portada de index.html: cielo, pueblo del Polo Norte en acuarela y nieve (lo dibuja js/pueblo.js). */
+:root {
+  --teja: #8E2F12;          /* encabezado: rojo teja, como el papel de las cartas */
+  --teja-osc: #6F230C;
+  --noche: #1D3B63;         /* cielo acuarela: arriba */
+  --cielo: #3C6F9E;
+  --horizonte: #A6C8DC;
+  --nieve: #F7FAFC;
+  --sombra-nieve: #CFE0EC;
+  --pino-acuarela: #2F6B4A;
+  --pueblo-h: clamp(250px, 27vw, 380px);
+}
+
+
+.hero { position: relative; overflow: hidden; isolation: isolate; color: var(--crema);
+  background: linear-gradient(180deg, var(--noche) 0%, #2A527F 32%, var(--cielo) 58%, #7FA9C8 80%, var(--horizonte) 100%); }
+.hero .wrap { position: relative; z-index: 10; display: flex; flex-wrap: wrap; align-items: center; gap: 36px 48px;
+  padding-top: 48px; padding-bottom: calc(var(--pueblo-h) - 30px); }
+@media (min-width: 700px) { .hero .wrap { padding-top: 72px; } }
+
+.capa { position: absolute; left: 0; right: 0; pointer-events: none; }
+.capa svg { display: block; width: 100%; height: 100%; }
+.capa-estrellas { top: 0; height: 60%; z-index: 1; }
+.capa-montes { bottom: 0; height: calc(var(--pueblo-h) * .55 + clamp(130px, 15vw, 230px)); z-index: 3; }
+.capa-pueblo, .capa-vida { bottom: 0; height: var(--pueblo-h); }
+.capa-pueblo { z-index: 4; }
+.capa-vida { z-index: 5; }
+.nieve { position: absolute; inset: 0; z-index: 7; width: 100%; height: 100%; pointer-events: none; }
+.papel { position: absolute; inset: 0; z-index: 8; pointer-events: none; opacity: .16; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .45 0 0 0 0 .35 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23p)'/%3E%3C/svg%3E"); }
+.ola { position: absolute; left: 0; right: 0; bottom: -1px; z-index: 9; display: block; width: 100%; height: 60px; }
+
+/* Trineo que cruza el cielo de vez en cuando */
+.trineo { position: absolute; top: 9%; left: 0; z-index: 3; width: clamp(150px, 16vw, 230px); pointer-events: none;
+  animation: vuelo 30s linear infinite; animation-delay: -6s; will-change: transform; }
+.trineo svg { display: block; width: 100%; height: auto; overflow: visible; }
+@keyframes vuelo {
+  0% { transform: translate(-30vw, 30px) rotate(-4deg); }
+  45% { transform: translate(55vw, -8px) rotate(-2deg); }
+  70% { transform: translate(130vw, 10px) rotate(-5deg); }
+  100% { transform: translate(130vw, 10px) rotate(-5deg); }
+}
+
+/* Texto legible sobre el cielo: un velo suave detrás */
+.hero-text { position: relative; flex: 1 1 460px; min-width: 0; }
+.velo { position: absolute; inset: 0; z-index: 9; pointer-events: none;
+  background: linear-gradient(90deg, rgba(14, 30, 56, .55) 0%, rgba(14, 30, 56, .38) 35%, rgba(14, 30, 56, .12) 58%, rgba(14, 30, 56, 0) 72%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 52%, transparent 78%); mask-image: linear-gradient(180deg, #000 0%, #000 52%, transparent 78%); }
+@media (max-width: 900px) { .velo { background: linear-gradient(180deg, rgba(14, 30, 56, .5) 0%, rgba(14, 30, 56, .32) 45%, rgba(14, 30, 56, 0) 70%); -webkit-mask-image: none; mask-image: none; } }
+.hero h1 { text-shadow: 0 2px 18px rgba(10, 24, 48, .45); }
+.hero h1 span { color: #F0CF7E; }
+.hero-lead { color: #F4EEDF !important; text-shadow: 0 1px 10px rgba(10, 24, 48, .55); }
+.etiqueta { background: rgba(14, 32, 58, .55) !important; border-color: rgba(240, 207, 126, .55) !important; color: #F0CF7E !important; }
+.hero-acciones .link { color: #F4EEDF !important; text-shadow: 0 1px 8px rgba(10, 24, 48, .6); }
+.sobre-nota { color: #F1F5F8 !important; text-shadow: 0 1px 8px rgba(10, 24, 48, .7); }
+.hero-sobre { position: relative; z-index: 2; }
+
+/* Logo del taller en el sobre */
+.sobre-logo { position: absolute; left: 5.5%; top: 8%; width: 31%; height: auto; transform: rotate(-3deg); }
+
+/* ---- animaciones del pueblo (capa-vida) ---- */
+.capa-vida * { transform-box: fill-box; }
+.camina { animation: cruzar var(--d, 30s) linear infinite; animation-delay: var(--del, 0s); transform: translateX(var(--x0, 300px)); }
+.camina.izq { animation-name: cruzarIzq; }
+@keyframes cruzar { from { transform: translateX(-90px); } to { transform: translateX(1530px); } }
+@keyframes cruzarIzq { from { transform: translateX(1530px); } to { transform: translateX(-90px); } }
+.paso { animation: bob .5s ease-in-out infinite alternate; }
+@keyframes bob { from { transform: translateY(0); } to { transform: translateY(-1.6px); } }
+.pierna { transform-origin: 50% 0; animation: pierna .5s ease-in-out infinite alternate; }
+.pierna.b { animation-direction: alternate-reverse; }
+@keyframes pierna { from { transform: rotate(20deg); } to { transform: rotate(-20deg); } }
+.brazo { transform-origin: 50% 8%; animation: brazo .5s ease-in-out infinite alternate-reverse; }
+@keyframes brazo { from { transform: rotate(16deg); } to { transform: rotate(-16deg); } }
+.martillo { transform-origin: 15% 12%; animation: golpe .75s cubic-bezier(.5, 0, .7, 1) infinite; }
+@keyframes golpe { 0%, 100% { transform: rotate(-55deg); } 55% { transform: rotate(12deg); } 62% { transform: rotate(6deg); } }
+.chispazo { transform-origin: center; animation: chispazo .75s linear infinite; }
+@keyframes chispazo { 0%, 50% { opacity: 0; transform: scale(.3); } 58% { opacity: 1; transform: scale(1); } 80%, 100% { opacity: 0; transform: scale(1.4); } }
+.envuelve { transform-origin: 50% 100%; animation: envuelve 3s ease-in-out infinite; }
+@keyframes envuelve { 0%, 100% { transform: translateY(0) rotate(0); } 20% { transform: translateY(-9px) rotate(-6deg); } 40% { transform: translateY(0) rotate(0); } }
+.humo { transform-origin: center; animation: humo 6s linear infinite; opacity: 0; }
+@keyframes humo { 0% { transform: translate(0, 0) scale(.5); opacity: 0; } 12% { opacity: .55; } 100% { transform: translate(-34px, -95px) scale(2.2); opacity: 0; } }
+.luz { animation: brillo 2s ease-in-out infinite alternate; }
+@keyframes brillo { from { opacity: .3; } to { opacity: 1; } }
+.halo { animation: halo 5s ease-in-out infinite alternate; }
+@keyframes halo { from { opacity: .35; } to { opacity: .8; } }
+.estrella-arbol { transform-origin: center; animation: estrellaArbol 3s ease-in-out infinite alternate; }
+@keyframes estrellaArbol { from { transform: scale(.92); opacity: .85; } to { transform: scale(1.08); opacity: 1; } }
+.pasta { transform-origin: 85% 30%; animation: pasta 10s ease-in-out infinite; }
+@keyframes pasta { 0%, 30%, 100% { transform: rotate(0); } 40%, 70% { transform: rotate(28deg); } }
+.chispa { transform-origin: center; animation: chispa 3s ease-in-out infinite; opacity: 0; }
+@keyframes chispa { 0%, 100% { opacity: 0; transform: scale(.2) rotate(0); } 50% { opacity: 1; transform: scale(1) rotate(45deg); } }
+.tw { animation: tw 3s ease-in-out infinite alternate; }
+@keyframes tw { from { opacity: .25; } to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .trineo { display: none; }
+  .camina { transform: translateX(var(--x0, 300px)) !important; }
+}
+.hero { animation: none; }
+
+/* En pantallas anchas la portada cabe completa en la ventana (sin el pueblo cortado abajo). */
+@media (min-width: 900px) {
+  .hero { --pueblo-h: clamp(210px, 33svh, 360px); height: calc(100svh - 72px); min-height: 580px; max-height: 940px; }
+  .hero .wrap { height: 100%; padding-top: clamp(20px, 4svh, 56px); padding-bottom: calc(var(--pueblo-h) - 50px); align-content: center; }
+  .hero h1 { font-size: clamp(40px, min(5.2vw, 8.4svh), 72px); }
+  .hero-lead { margin-top: clamp(12px, 2svh, 22px) !important; }
+  .hero-acciones { margin-top: clamp(16px, 3svh, 32px) !important; }
+  .sobre { width: min(460px, 100%, 52svh) !important; }
+}
