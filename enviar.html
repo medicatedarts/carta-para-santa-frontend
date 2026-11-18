@@ -368,7 +368,9 @@
       buyer: { name: f.buyerName.value.trim(), email: f.buyerEmail.value.trim() },
       shipTo: { name: f.shipName.value.trim(), line1: f.line1.value.trim(), line2: f.line2.value.trim(), city: f.city.value.trim(), state: f.state.value, zip: f.zip.value.trim(), country: 'US' },
       consent: { isParentOrAuthorized: true, acceptedTerms: true, acceptedPrivacy: true },
-      promoCode: promo ? promo.code : ($('codigo').value.trim() || undefined)
+      promoCode: promo ? promo.code : ($('codigo').value.trim() || undefined),
+      // Solo si el adulto llegó desde un anuncio de Meta (ver js/config.js).
+      attribution: { fbc: CPS.getFbc() }
     };
 
     sending = true;

@@ -8,4 +8,4 @@ Sitio estático de CartaParaSanta.com: HTML + CSS + JavaScript sin framework ni 
 - Nada de la carta se envía al servidor hasta que el adulto pulsa "Pagar" en `enviar.html`. Mientras tanto vive en `localStorage`.
 - Los límites de validación deben coincidir con los del backend.
 - Los diseños de papel (`assets/papeles/`) son copia de los del backend: si cambias uno, avisa para actualizar el otro repo.
-- Sin analítica que siga al usuario y sin cookies de terceros (el sitio está dirigido a niños).
+- Sin analítica que siga al usuario, sin código de Meta u otras redes en las páginas y sin cookies de terceros (el sitio está dirigido a niños). Las conversiones de los anuncios se envían desde el backend (`metaCapi.js`) solo con datos del adulto que paga; el frontend solo guarda el `fbclid` del anuncio (ver `js/config.js`).

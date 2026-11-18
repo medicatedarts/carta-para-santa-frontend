@@ -92,5 +92,26 @@
     }
   };
 
+  // Clic de un anuncio de Meta: si la URL trae ?fbclid=..., se guarda SOLO en este
+  // navegador (almacenamiento propio, no es una cookie de terceros ni código de Meta) y
+  // se manda al backend únicamente cuando el adulto paga, para saber qué anuncio funcionó.
+  // Se borra solo a los 90 días. Ver privacidad.html §5 y metaCapi.js en el backend.
+  var FBC_KEY = 'cps_fbc';
+  var FBC_DAYS = 90;
+  try {
+    var fbclid = new URLSearchParams(location.search).get('fbclid');
+    if (fbclid && /^[A-Za-z0-9_\-.]{8,250}$/.test(fbclid)) {
+      localStorage.setItem(FBC_KEY, JSON.stringify({ v: 'fb.1.' + Date.now() + '.' + fbclid, t: Date.now() }));
+    }
+  } catch (e) { /* modo privado: seguimos sin guardar */ }
+  CPS.getFbc = function () {
+    try {
+      var saved = JSON.parse(localStorage.getItem(FBC_KEY) || 'null');
+      if (saved && saved.v && Date.now() - saved.t < FBC_DAYS * 864e5) return saved.v;
+      localStorage.removeItem(FBC_KEY);
+    } catch (e) {}
+    return undefined;
+  };
+
   window.CPS = CPS;
 })();
