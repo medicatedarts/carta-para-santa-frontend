@@ -190,7 +190,7 @@
       counts = {};
       s.byStatus.forEach(function (r) { counts[r.status] = r.n; });
       renderTabs();
-      renderTotales(s.byDay);
+      renderTotales(s.byDay, s.reminders);
     }).catch(function () {});
     loadList();
     if (selected) openOrder(selected);
@@ -272,7 +272,8 @@
       '<dt>Diseño</dt><dd>' + esc(CPS.designName(o.design)) + '</dd>' +
       '<dt>Monto</dt><dd>' + money(o.amount_cents) + '</dd>' +
       '<dt>Creada</dt><dd>' + fecha(o.created_at) + '</dd>' +
-      '<dt>Pagada</dt><dd>' + fecha(o.paid_at) + '</dd>' +
+      '<dt>Pagada</dt><dd>' + fecha(o.paid_at) + (o.paid_at && o.reminder1_at ? ' · 💌 recuperada por recordatorio' : '') + '</dd>' +
+      (o.reminder1_at ? '<dt>Recordatorios</dt><dd>1.º ' + fecha(o.reminder1_at) + (o.reminder2_at ? '<br>2.º ' + fecha(o.reminder2_at) : '') + '</dd>' : '') +
       '<dt>Enviada</dt><dd>' + fecha(o.mailed_at) + (o.lob_expected_delivery ? ' · llega ~' + esc(o.lob_expected_delivery) : '') + '</dd>' +
       '<dt>Lob</dt><dd>' + (o.lob_letter_id ? esc(o.lob_letter_id) + (o.lobUrl ? ' · <a href="' + esc(o.lobUrl) + '" target="_blank" rel="noopener">PDF de Lob</a>' : '') : '—') + '</dd>' +
       '</dl>';
@@ -357,13 +358,16 @@
     }).catch(function (err) { m.className = 'aviso aviso-error msg'; m.textContent = err.message; m.hidden = false; });
   });
 
-  function renderTotales(days) {
-    if (!days || !days.length) { $('totales').innerHTML = '<p class="vacio">Todavía no hay órdenes pagadas.</p>'; return; }
+  function renderTotales(days, rem) {
+    // Recordatorios de compra sin terminar: cuántos se enviaron y cuántos terminaron pagando.
+    var r = rem && rem.sent ? '<p class="nota" style="margin:0 0 10px">💌 Recordatorios: ' + rem.sent + ' pedidos recibieron recordatorio · ' +
+      rem.recovered + ' se recuperaron (' + Math.round(100 * rem.recovered / rem.sent) + '%) · ' + money(rem.cents) + '</p>' : '';
+    if (!days || !days.length) { $('totales').innerHTML = r + '<p class="vacio">Todavía no hay órdenes pagadas.</p>'; return; }
     var tot = days.reduce(function (a, d) { return { n: a.n + d.orders, c: a.c + d.cents }; }, { n: 0, c: 0 });
     var h = '<table class="totales"><thead><tr><th>Día</th><th>Órdenes</th><th>Cobrado</th></tr></thead><tbody>';
     days.forEach(function (d) { h += '<tr><td>' + esc(d.day) + '</td><td>' + d.orders + '</td><td>' + money(d.cents) + '</td></tr>'; });
     h += '<tr><th>Total</th><th>' + tot.n + '</th><th>' + money(tot.c) + '</th></tr></tbody></table>';
-    $('totales').innerHTML = h;
+    $('totales').innerHTML = r + h;
   }
 
   // ---------- Estado del sistema ----------
