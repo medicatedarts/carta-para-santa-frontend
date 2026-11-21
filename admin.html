@@ -22,6 +22,7 @@
   .tab b { display: inline-block; min-width: 22px; margin-left: 6px; padding: 0 6px; border-radius: 999px; background: #F1EADB; color: var(--pino); font-size: 12px; line-height: 20px; }
   .tab[aria-selected="true"] b { background: var(--dorado); }
   .tab.alerta b { background: var(--rojo); color: #FFFFFF; }
+  .tab.gris { margin-left: auto; color: var(--texto-3); border-style: dashed; }
   .cols { display: grid; grid-template-columns: 1fr; gap: 18px; }
   @media (min-width: 1000px) { .cols { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); } }
   .buscar { display: flex; gap: 8px; margin-bottom: 12px; }
@@ -137,7 +138,9 @@
     { id: 'paid', label: 'Pagadas', statuses: ['paid'] },
     { id: 'sent_to_lob', label: 'En Lob', statuses: ['sent_to_lob'] },
     { id: 'enviadas', label: 'Enviadas', statuses: ['mailed', 'in_transit', 'delivered'] },
-    { id: 'todas', label: 'Todas', statuses: null }
+    { id: 'todas', label: 'Todas', statuses: ['paid', 'needs_review', 'sent_to_lob', 'error', 'mailed', 'in_transit', 'delivered', 'refunded'] },
+    // Aparte, para que no confundan: pagos sin terminar (se cancelan y borran solos a las 25 h).
+    { id: 'sinpagar', label: 'Sin pagar', statuses: ['pending_payment', 'cancelled'], gris: true }
   ];
   var LABEL = { pending_payment: 'Sin pagar', paid: 'Pagada', needs_review: 'Revisión', sent_to_lob: 'En Lob', error: 'Error', mailed: 'Enviada', in_transit: 'En tránsito', delivered: 'Entregada', cancelled: 'Cancelada', refunded: 'Reembolsada' };
   var current = 'needs_review';
@@ -206,7 +209,7 @@
       var b = document.createElement('button');
       b.type = 'button';
       b.setAttribute('role', 'tab');
-      b.className = 'tab' + (t.alerta && n ? ' alerta' : '');
+      b.className = 'tab' + (t.alerta && n ? ' alerta' : '') + (t.gris ? ' gris' : '');
       b.setAttribute('aria-selected', String(t.id === current));
       b.innerHTML = esc(t.label) + '<b>' + n + '</b>';
       b.addEventListener('click', function () { current = t.id; $('q').value = ''; renderTabs(); loadList(); });
@@ -260,7 +263,9 @@
     var canEditAddr = !o.lob_letter_id;
     var h = '<h2>' + esc(o.order_number) + ' ' + badge(o.status) + '</h2>';
     if (o.review_reason) h += '<div class="aviso aviso-info" style="margin-bottom:12px">Revisión: ' + esc(o.review_reason) + '</div>';
-    if (o.error) h += '<div class="aviso aviso-error" style="margin-bottom:12px">Error: ' + esc(o.error) + '</div>';
+    if (o.status === 'pending_payment') h += '<div class="aviso aviso-info" style="margin-bottom:12px">Esta persona llegó a la página de pago de Stripe pero no terminó de pagar. No se cobró nada ni se envió nada. Si no paga en 24 horas, la orden se cancela y sus datos se borran solos.</div>';
+    else if (o.status === 'cancelled' && o.purged_at) h += '<div class="aviso aviso-info" style="margin-bottom:12px">' + esc(o.error || 'Cancelada') + '.</div>';
+    else if (o.error) h += '<div class="aviso aviso-error" style="margin-bottom:12px">Error: ' + esc(o.error) + '</div>';
     h += '<dl>' +
       '<dt>Adulto</dt><dd>' + esc(o.buyer_name || '') + '<br>' + esc(o.buyer_email || '') + '</dd>' +
       '<dt>Dirección</dt><dd style="white-space:pre-line">' + esc(dir || '— (borrada por retención)') + '</dd>' +
