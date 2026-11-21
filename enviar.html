@@ -42,6 +42,16 @@
   .mini .n { font-weight: 800; font-size: 16px; }
   .mini .d { font-size: 14px; color: var(--texto-3); margin-top: 4px; }
   .mini a { display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; font-weight: 800; }
+  .cartas { display: flex; flex-direction: column; gap: 16px; }
+  .cartas .mini + .mini { padding-top: 16px; border-top: 1px solid #F0E8D6; }
+  .mini .acc { display: flex; flex-wrap: wrap; gap: 0 16px; }
+  .mini .acc button { background: none; border: 0; padding: 0; color: var(--rojo); font: inherit; font-size: 14px; font-weight: 800; min-height: 44px; cursor: pointer; text-decoration: underline; }
+  .mini .falta { color: #7A1610; font-weight: 800; }
+  .mini .precio-carta { font-size: 14px; font-weight: 800; color: var(--pino); margin-top: 4px; }
+  .hermanito { border: 2px dashed var(--dorado); background: #FFFBF0; border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+  .hermanito p { margin: 0; font-size: 15px; line-height: 1.5; color: #3B4540; }
+  .hermanito p b { color: var(--pino); }
+  .hermanito .btn { min-height: 48px; font-size: 16px; align-self: flex-start; }
   .incluye { background: var(--crema); border-radius: 12px; padding: 14px 16px; font-size: 14px; line-height: 1.6; color: #3B4540; }
   .incluye b { display: block; color: var(--pino); margin-bottom: 4px; }
   dl.total { margin: 0; display: grid; grid-template-columns: 1fr auto; row-gap: 10px; font-size: 15px; }
@@ -104,9 +114,8 @@
 
       <div class="bloque" role="group" aria-labelledby="t2" id="fs-dir">
         <h2 id="t2"><span class="n" aria-hidden="true">2</span>¿A dónde enviamos la carta de Santa?</h2>
-        <label class="campo">Nombre en el sobre
-          <input type="text" name="shipName" autocomplete="off" maxlength="60" placeholder="Ej.: Sofía Rivera" required>
-        </label>
+        <!-- Un campo por carta: cada nene recibe su propio sobre, a la misma dirección. -->
+        <div id="sobres" style="display:flex;flex-direction:column;gap:14px"></div>
         <label class="campo">Dirección (línea 1)
           <input type="text" name="line1" autocomplete="address-line1" maxlength="64" placeholder="Calle, número, urbanización" required>
         </label>
@@ -145,14 +154,10 @@
 
     <aside class="pedido" aria-label="Resumen del pedido">
       <h2>Tu pedido</h2>
-      <div class="mini">
-        <div class="pp-holder" id="mini-papel" role="img" aria-label="Tu carta"></div>
-        <div>
-          <p class="n" id="r-titulo">Tu carta a Santa</p>
-          <p class="d" id="r-diseno"></p>
-          <p class="d" id="r-regalos"></p>
-          <a href="carta.html">Ver o editar la carta</a>
-        </div>
+      <div class="cartas" id="cartas"></div>
+      <div class="hermanito" id="hermanito" hidden>
+        <p><b>¿Tienes otro nene?</b> <span id="hermanito-txt">Añade su carta por menos. Cada uno recibe su propio sobre con su nombre.</span></p>
+        <button type="button" class="btn btn-borde" id="btn-hermanito">+ Añadir carta para otro nene</button>
       </div>
       <div class="incluye"><b>Incluye</b>Respuesta personalizada de Santa · Copia impresa de la carta original · Envío por correo postal</div>
       <details class="codigo" id="codigo-box">
@@ -166,6 +171,7 @@
       </details>
       <dl class="total">
         <dt>Carta de Santa</dt><dd class="js-precio">—</dd>
+        <dt id="r-extra-k" hidden>Hermanitos</dt><dd id="r-extra" hidden></dd>
         <dt class="desc" id="r-desc-k" hidden>Descuento</dt><dd class="desc" id="r-desc" hidden></dd>
         <dt>Envío postal</dt><dd>Incluido</dd>
         <dt>Impuestos (IVU)</dt><dd id="r-ivu">Incluido</dd>
@@ -199,12 +205,15 @@
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
-  var draft = CPS.loadDraft();
+  // Todas las cartas de la compra (combo de hermanitos). La primera es la principal.
+  var store = CPS.loadLetters();
+  var letters = store.list;
   // Sin carta no hay nada que enviar.
-  if (!draft || (!String(draft.message || '').trim() && !(draft.gifts || []).length)) {
+  if (!letters.length || !CPS.letterReady(letters[0])) {
     location.replace('carta.html');
     return;
   }
+  var draft = letters[0];
 
   var params = new URLSearchParams(location.search);
   if (params.get('cancelado')) $('cancelado').hidden = false;
@@ -226,33 +235,118 @@
   var KEY = 'cps_envio';
   try {
     var saved = JSON.parse(sessionStorage.getItem(KEY) || '{}');
-    Object.keys(saved).forEach(function (k) { if (form.elements[k] && k !== 'consent') form.elements[k].value = saved[k]; });
+    Object.keys(saved).forEach(function (k) { if (form.elements[k] && k !== 'consent' && k !== 'sobres') form.elements[k].value = saved[k]; });
   } catch (e) {}
   form.addEventListener('input', function (e) {
     var data = {};
-    ['buyerName', 'buyerEmail', 'shipName', 'line1', 'line2', 'city', 'state', 'zip'].forEach(function (k) { data[k] = form.elements[k].value; });
+    ['buyerName', 'buyerEmail', 'line1', 'line2', 'city', 'state', 'zip'].forEach(function (k) { data[k] = form.elements[k].value; });
+    data.sobres = letters.map(function (_, i) { var el = form.elements['shipName' + i]; return el ? el.value : ''; });
     try { sessionStorage.setItem(KEY, JSON.stringify(data)); } catch (err) {}
     if (e.target.getAttribute('aria-invalid')) e.target.removeAttribute('aria-invalid');
     if (e.target.name === 'consent') $('consent-box').classList.remove('invalida');
   });
-  if (!form.elements.shipName.value && draft.childName) form.elements.shipName.value = draft.childName;
 
-  // ---------- Resumen ----------
-  renderPapel($('mini-papel'), {
-    design: draft.design, greeting: draft.greeting, intro: CPS.introLine(draft.childName, draft.childAge),
-    message: draft.message, gifts: draft.gifts, farewell: draft.farewell, signature: draft.signature || draft.childName
+  // ---------- Nombres en los sobres (uno por carta) ----------
+  var savedSobres = (saved && Array.isArray(saved.sobres)) ? saved.sobres : [];
+  if (!savedSobres.length && saved && saved.shipName) savedSobres = [saved.shipName]; // datos de antes del combo
+  var many = letters.length > 1;
+  letters.forEach(function (d, i) {
+    var label = document.createElement('label');
+    label.className = 'campo';
+    label.appendChild(document.createTextNode(many
+      ? 'Nombre en el sobre de la carta ' + (i + 1) + (d.childName ? ' (' + d.childName + ')' : '')
+      : 'Nombre en el sobre'));
+    var input = document.createElement('input');
+    input.type = 'text'; input.name = 'shipName' + i; input.autocomplete = 'off'; input.maxLength = 60; input.required = true;
+    input.placeholder = 'Ej.: Sofía Rivera';
+    input.value = savedSobres[i] || d.childName || '';
+    label.appendChild(input);
+    $('sobres').appendChild(label);
   });
-  $('r-titulo').textContent = draft.childName ? 'Carta de ' + draft.childName : 'Tu carta a Santa';
-  $('r-diseno').textContent = 'Diseño: ' + CPS.designName(draft.design);
-  var ng = (draft.gifts || []).length;
-  $('r-regalos').textContent = ng === 1 ? '1 regalo en la lista' : ng ? ng + ' regalos en la lista' : 'Sin lista de regalos';
 
+  // ---------- Resumen: una tarjeta por carta ----------
   var cfg = null;
+  function renderCartas() {
+    var box = $('cartas');
+    box.innerHTML = '';
+    letters.forEach(function (d, i) {
+      var ready = CPS.letterReady(d);
+      var item = document.createElement('div');
+      item.className = 'mini';
+      var holder = document.createElement('div');
+      holder.className = 'pp-holder';
+      holder.setAttribute('role', 'img');
+      holder.setAttribute('aria-label', 'Carta ' + (i + 1));
+      item.appendChild(holder);
+      var info = document.createElement('div');
+      var ng = (d.gifts || []).length;
+      var price = cfg ? CPS.money(i === 0 ? cfg.priceCents : CPS.lettersTotal(cfg, 2) - cfg.priceCents, cfg.currency) : '';
+      info.innerHTML =
+        '<p class="n">' + CPS.esc(d.childName ? 'Carta de ' + d.childName : (many ? 'Carta ' + (i + 1) : 'Tu carta a Santa')) + '</p>' +
+        '<p class="d">Diseño: ' + CPS.esc(CPS.designName(d.design)) + '</p>' +
+        (ready
+          ? '<p class="d">' + (ng === 1 ? '1 regalo en la lista' : ng ? ng + ' regalos en la lista' : 'Sin lista de regalos') + '</p>'
+          : '<p class="d falta">Sin terminar: le falta el mensaje o los regalos</p>') +
+        (many && price ? '<p class="precio-carta">' + (i === 0 ? price : price + ' · hermanito') + '</p>' : '') +
+        '<div class="acc"><button type="button" data-editar="' + i + '">' + (ready ? 'Ver o editar' : 'Terminar esta carta') + '</button>' +
+        (i > 0 ? '<button type="button" data-quitar="' + i + '">Quitar</button>' : '') + '</div>';
+      item.appendChild(info);
+      box.appendChild(item);
+      renderPapel(holder, {
+        design: d.design, greeting: d.greeting, intro: CPS.introLine(d.childName, d.childAge),
+        message: d.message, gifts: d.gifts, farewell: d.farewell, signature: d.signature || d.childName
+      });
+    });
+  }
+  // Editar una carta: se marca como activa y se vuelve a carta.html, al paso de revisión.
+  $('cartas').addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (!b) return;
+    if (b.dataset.editar !== undefined) {
+      var i = Number(b.dataset.editar);
+      CPS.setActiveLetter(i);
+      var d = CPS.loadDraft();
+      if (CPS.letterReady(d)) { d.step = 3; CPS.saveDraft(d); }
+      location.href = 'carta.html';
+    } else if (b.dataset.quitar !== undefined) {
+      var j = Number(b.dataset.quitar);
+      var who = letters[j].childName ? 'la carta de ' + letters[j].childName : 'la carta ' + (j + 1);
+      if (!window.confirm('¿Quitar ' + who + ' de esta compra? Se borra de este dispositivo.')) return;
+      CPS.removeLetter(j);
+      location.reload();
+    }
+  });
+  // Añadir hermanito: carta nueva y a escribirla.
+  $('btn-hermanito').addEventListener('click', function () {
+    if (CPS.addLetter() < 0) return;
+    location.href = 'carta.html';
+  });
+  function paintHermanito() {
+    var max = Math.min(CPS.MAX_LETTERS, (cfg && cfg.maxLetters) || CPS.MAX_LETTERS);
+    $('hermanito').hidden = letters.length >= max || !!(cfg && cfg.mailboxOpen === false);
+    if (cfg) {
+      var extra = CPS.lettersTotal(cfg, 2) - cfg.priceCents;
+      $('hermanito-txt').textContent = 'Añade su carta por solo ' + CPS.money(extra, cfg.currency) +
+        '. Cada uno recibe su propio sobre con su nombre' + (letters.length > 1 ? ' (hasta ' + max + ' cartas por compra).' : '.');
+      $('btn-hermanito').textContent = '+ Añadir carta para otro nene (' + CPS.money(extra, cfg.currency) + ')';
+    }
+  }
+  renderCartas();
+  paintHermanito();
+
   CPS.getConfig().then(function (c) {
     cfg = c;
     if (!c) return;
     var price = CPS.money(c.priceCents, c.currency);
     document.querySelectorAll('.js-precio').forEach(function (el) { el.textContent = price; });
+    if (many) {
+      var extraTotal = CPS.lettersTotal(c, letters.length) - c.priceCents;
+      $('r-extra-k').textContent = letters.length === 2 ? 'Carta de hermanito' : (letters.length - 1) + ' cartas de hermanitos';
+      $('r-extra').textContent = CPS.money(extraTotal, c.currency);
+      $('r-extra-k').hidden = $('r-extra').hidden = false;
+    }
+    renderCartas();
+    paintHermanito();
     paintTotal();
     if (c.taxMode !== 'included') $('r-ivu').textContent = 'Se calcula al pagar';
     var pie = 'Llega en ' + CPS.DELIVERY_TEXT;
@@ -268,10 +362,11 @@
   var promo = null; // { code, finalCents }
   function paintTotal() {
     if (!cfg) return;
-    var final = promo ? promo.finalCents : cfg.priceCents;
+    var list = CPS.lettersTotal(cfg, letters.length);
+    var final = promo ? promo.finalCents : list;
     $('r-total').textContent = CPS.money(final, cfg.currency);
     $('r-desc-k').hidden = $('r-desc').hidden = !promo;
-    if (promo) $('r-desc').textContent = '−' + CPS.money(cfg.priceCents - final, cfg.currency) + ' (' + promo.code + ')';
+    if (promo) $('r-desc').textContent = '−' + CPS.money(list - final, cfg.currency) + ' (' + promo.code + ')';
     $('pagar-txt').textContent = final === 0 ? 'Enviar al Polo Norte (gratis)' : 'Pagar ' + CPS.money(final, cfg.currency) + ' y enviar al Polo Norte';
   }
   function codigoMsg(text, ok) {
@@ -284,12 +379,12 @@
     var email = form.elements.buyerEmail.value.trim();
     if (!email) { codigoMsg('Escribe primero el correo del adulto (sección 1).', false); form.elements.buyerEmail.focus(); return; }
     $('btn-codigo').disabled = true;
-    fetch(CPS.BACKEND_URL + '/api/promo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: code, email: email }) })
+    fetch(CPS.BACKEND_URL + '/api/promo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: code, email: email, letters: letters.length }) })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {
         if (res.ok) {
           promo = { code: res.j.code, finalCents: res.j.finalCents };
-          codigoMsg(res.j.finalCents === 0 ? '¡Código aplicado! Esta carta es gratis.' : '¡Código aplicado!', true);
+          codigoMsg(res.j.finalCents === 0 ? (many ? '¡Código aplicado! Estas cartas son gratis.' : '¡Código aplicado! Esta carta es gratis.') : '¡Código aplicado!', true);
         } else {
           promo = null;
           codigoMsg(res.j.error || 'Ese código no es válido.', false);
@@ -314,7 +409,13 @@
     if (opts.back) {
       var p = document.createElement('p');
       p.className = 'err-acciones';
-      p.innerHTML = '<a href="carta.html">Volver a la carta para cambiarla</a>';
+      var a = document.createElement('a');
+      a.href = 'carta.html';
+      a.textContent = 'Volver a la carta para cambiarla';
+      // Combo: abre justo la carta que tiene el problema.
+      var idx = typeof opts.letter === 'number' ? opts.letter : 0;
+      a.addEventListener('click', function () { CPS.setActiveLetter(idx); });
+      p.appendChild(a);
       box.appendChild(p);
     }
     box.hidden = false;
@@ -330,12 +431,16 @@
     var checks = [
       [f.buyerName, function (v) { return v.trim(); }, 'Escribe el nombre del adulto responsable.'],
       [f.buyerEmail, function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()); }, 'Revisa el correo electrónico.'],
-      [f.shipName, function (v) { return v.trim(); }, 'Escribe el nombre que va en el sobre.'],
       [f.line1, function (v) { return v.trim(); }, 'Escribe la dirección.'],
       [f.city, function (v) { return v.trim(); }, 'Escribe la ciudad o el pueblo.'],
       [f.state, function (v) { return v; }, 'Escoge el estado o territorio.'],
       [f.zip, function (v) { return /^\d{5}(-\d{4})?$/.test(v.trim()); }, 'El código postal debe tener 5 dígitos.']
     ];
+    letters.forEach(function (_, k) {
+      checks.push([f['shipName' + k], function (v) { return v.trim(); }, many ? 'Escribe el nombre que va en el sobre de la carta ' + (k + 1) + '.' : 'Escribe el nombre que va en el sobre.']);
+    });
+    // Orden: adulto (2), sobres, y luego la dirección.
+    checks = checks.slice(0, 2).concat(checks.slice(checks.length - letters.length), checks.slice(2, checks.length - letters.length));
     for (var i = 0; i < checks.length; i++) {
       if (!checks[i][1](checks[i][0].value)) {
         checks[i][0].setAttribute('aria-invalid', 'true');
@@ -356,18 +461,28 @@
     e.preventDefault();
     if (sending) return;
     clearErrors();
+    // Combo: todas las cartas deben estar terminadas.
+    for (var k = 0; k < letters.length; k++) {
+      if (!CPS.letterReady(letters[k])) {
+        showError('La carta ' + (k + 1) + ' está sin terminar: escríbele un mensaje o un regalo, o quítala.', { back: true, letter: k });
+        return;
+      }
+    }
     var problem = localCheck();
     if (problem) { showError(problem); return; }
 
     var f = form.elements;
     var body = {
-      letter: {
-        design: draft.design, greeting: draft.greeting, childName: draft.childName,
-        childAge: draft.childAge === '' ? null : Number(draft.childAge),
-        message: draft.message, gifts: draft.gifts, farewell: draft.farewell, signature: draft.signature
-      },
+      letters: letters.map(function (d, i) {
+        return {
+          design: d.design, greeting: d.greeting, childName: d.childName,
+          childAge: d.childAge === '' ? null : Number(d.childAge),
+          message: d.message, gifts: d.gifts, farewell: d.farewell, signature: d.signature,
+          shipName: f['shipName' + i].value.trim()
+        };
+      }),
       buyer: { name: f.buyerName.value.trim(), email: f.buyerEmail.value.trim() },
-      shipTo: { name: f.shipName.value.trim(), line1: f.line1.value.trim(), line2: f.line2.value.trim(), city: f.city.value.trim(), state: f.state.value, zip: f.zip.value.trim(), country: 'US' },
+      shipTo: { name: f.shipName0.value.trim(), line1: f.line1.value.trim(), line2: f.line2.value.trim(), city: f.city.value.trim(), state: f.state.value, zip: f.zip.value.trim(), country: 'US' },
       consent: { isParentOrAuthorized: true, acceptedTerms: true, acceptedPrivacy: true },
       promoCode: promo ? promo.code : ($('codigo').value.trim() || undefined),
       // Solo si el adulto llegó desde un anuncio de Meta (ver js/config.js).
@@ -391,7 +506,7 @@
         var j = res.j || {};
         var msg = j.error || 'No se pudo preparar el pago. Inténtalo de nuevo en unos minutos.';
         if (j.field === 'promo') { promo = null; paintTotal(); $('codigo-box').open = true; codigoMsg(msg, false); showError(msg); }
-        else if (j.code === 'content_policy') showError(msg, { back: true });
+        else if (j.code === 'content_policy') showError(msg, { back: true, letter: j.letter });
         else if (j.field === 'shipTo' || /^address/.test(j.code || '')) showError(msg, { address: true });
         else showError(msg);
         done();

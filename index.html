@@ -103,6 +103,8 @@
   .precio-caja .k { margin: 0; color: var(--dorado-claro); font-weight: 800; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; }
   .precio-caja .monto { margin: 10px 0 0; font-family: 'Fraunces', serif; font-weight: 700; font-size: 56px; line-height: 1; }
   .precio-caja .det { margin: 10px 0 0; font-size: 16px; color: var(--gris-verde); }
+  .precio-caja .hermanos { margin: 16px 0 0; display: inline-block; background: rgba(226,194,122,0.14); border: 1px solid rgba(226,194,122,0.45); border-radius: 12px; padding: 10px 14px; font-size: 16px; line-height: 1.45; color: var(--crema); }
+  .precio-caja .hermanos b { color: var(--dorado-claro); }
   .precio-caja hr { border: 0; height: 1px; background: rgba(251,247,239,0.18); margin: 26px 0; }
   .precio-caja .inc { margin: 0; font-size: 16px; line-height: 1.6; color: var(--sobre-verde); }
   .envio-caja { background: #FFFFFF; border: 1px solid var(--borde); display: flex; flex-direction: column; gap: 20px; }
@@ -262,6 +264,7 @@
       <p class="k">Precio</p>
       <p class="monto" id="precio">$5.99</p>
       <p class="det" id="precio-det">por carta · envío incluido · IVU incluido</p>
+      <p class="hermanos" id="precio-hermanos"><b>¿Hermanitos?</b> Cada carta adicional en la misma compra: <b id="precio-extra">$3.99</b></p>
       <hr>
       <p class="inc">Incluye la respuesta impresa de Santa y la copia de la carta original, enviadas por correo a tu dirección en un sobre blanco con ventana.</p>
     </div>
@@ -294,6 +297,10 @@
     <details>
       <summary>¿El sobre viene decorado?</summary>
       <p>No. El sobre de la página es solo una ilustración. La carta llega en un sobre blanco estándar con ventana; la magia está adentro: la carta de Santa viene diseñada y decorada.</p>
+    </details>
+    <details>
+      <summary>¿Puedo enviar cartas para varios hermanitos?</summary>
+      <p>Sí. Antes de pagar toca «Añadir carta para otro nene» y cada uno escribe la suya. La primera cuesta <span class="js-precio-1">$5.99</span> y cada carta adicional en la misma compra, <span class="js-precio-extra">$3.99</span> (hasta 4 cartas). Cada nene recibe su propio sobre con su nombre, en la misma dirección.</p>
     </details>
     <details>
       <summary>¿Qué datos de mi hijo guardan?</summary>
@@ -352,6 +359,11 @@
       if (!cfg) return;
       if (cfg.priceCents) document.getElementById('precio').textContent = CPS.money(cfg.priceCents, cfg.currency);
       document.getElementById('precio-det').textContent = 'por carta · envío incluido' + (cfg.taxMode === 'included' ? ' · IVU incluido' : ' · más IVU');
+      var extra = CPS.lettersTotal(cfg, 2) - cfg.priceCents;
+      if (extra > 0 && extra < cfg.priceCents) document.getElementById('precio-extra').textContent = CPS.money(extra, cfg.currency);
+      else document.getElementById('precio-hermanos').hidden = true;
+      document.querySelectorAll('.js-precio-extra').forEach(function (el) { el.textContent = CPS.money(extra, cfg.currency); });
+      document.querySelectorAll('.js-precio-1').forEach(function (el) { el.textContent = CPS.money(cfg.priceCents, cfg.currency); });
       if (cfg.deadlineRecommended) {
         var f = CPS.longDate(cfg.deadlineRecommended);
         document.getElementById('fecha-limite').textContent = f;

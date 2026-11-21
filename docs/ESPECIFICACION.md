@@ -130,6 +130,13 @@ Cuerpo de `POST /api/checkout`:
   "consent": { "isParentOrAuthorized": true, "acceptedTerms": true, "acceptedPrivacy": true } }
 ```
 
+### Combo de hermanitos (desde el 21 nov 2026)
+
+- Las cartas viven en `localStorage` bajo `cps_cartas` (`{ list, active }`); `carta.html` edita la activa con `CPS.loadDraft/saveDraft` como antes. El borrador viejo (`cps_borrador`) se convierte solo.
+- En `enviar.html`, "Tu pedido" lista cada carta (editar / quitar) y ofrece "+ Añadir carta para otro nene" hasta `maxLetters` (de `/api/config`, 4). Hay un campo "Nombre en el sobre" por carta; la dirección es una sola.
+- Totales: primera carta a `priceCents` y las demás a `extraPriceCents`. No se puede pagar si alguna carta está sin terminar.
+- `carta.html` muestra "Carta 2 de 3 · hermanito" cuando hay más de una. La portada muestra el precio de hermanito y una pregunta frecuente.
+
 ## 6. Confirmación (`gracias.html`)
 
 Prototipo: `docs/prototipo/Confirm.dc.html` (pantalla de móvil 390 × 844; en escritorio se centra en una columna).

@@ -31,20 +31,83 @@
       return { step: 1, design: 'clasica', childName: '', childAge: '', greeting: 'Querido Santa:', message: '', gifts: [], giftDraft: '', farewell: 'Con mucho cariño,', signature: '' };
     },
 
-    // El borrador vive solo en este navegador hasta que el adulto paga.
-    loadDraft: function () {
-      try {
-        var raw = localStorage.getItem(CPS.DRAFT_KEY);
-        if (!raw) return null;
-        var d = JSON.parse(raw);
+    // Combo de hermanitos: hasta MAX_LETTERS cartas en una compra (la primera a precio normal
+    // y las demás a precio de hermanito). Debe coincidir con MAX_LETTERS_PER_ORDER del backend;
+    // el backend manda el valor real en /api/config (maxLetters).
+    MAX_LETTERS: 4,
+    LETTERS_KEY: 'cps_cartas',
+
+    // Las cartas viven solo en este navegador hasta que el adulto paga:
+    // { list: [borrador, …], active: índice de la que se está escribiendo }.
+    // Antes del combo había un solo borrador en DRAFT_KEY; si existe, se convierte.
+    _readLetters: function () {
+      var store = null;
+      try { store = JSON.parse(localStorage.getItem(CPS.LETTERS_KEY) || 'null'); } catch (e) {}
+      if (!store || !Array.isArray(store.list)) {
+        store = { list: [], active: 0 };
+        try {
+          var old = JSON.parse(localStorage.getItem(CPS.DRAFT_KEY) || 'null');
+          if (old) store.list.push(old);
+        } catch (e) {}
+      }
+      store.list = store.list.slice(0, CPS.MAX_LETTERS).map(function (d) {
         return Object.assign(CPS.emptyDraft(), d, { gifts: Array.isArray(d.gifts) ? d.gifts.slice(0, CPS.LIMITS.gifts) : [] });
-      } catch (e) { return null; }
+      });
+      if (!(store.active >= 0 && store.active < store.list.length)) store.active = 0;
+      return store;
+    },
+    _writeLetters: function (store) {
+      try {
+        localStorage.setItem(CPS.LETTERS_KEY, JSON.stringify(store));
+        localStorage.removeItem(CPS.DRAFT_KEY);
+      } catch (e) { /* modo privado: seguimos sin guardar */ }
+    },
+    loadLetters: function () { return CPS._readLetters(); },
+    // ¿La carta tiene algo que enviar? (mensaje o al menos un regalo)
+    letterReady: function (d) { return !!(d && (String(d.message || '').trim() || (d.gifts || []).length)); },
+    // Añade una carta vacía y la deja activa. Devuelve su índice o -1 si ya hay el máximo.
+    addLetter: function () {
+      var store = CPS._readLetters();
+      if (store.list.length >= CPS.MAX_LETTERS) return -1;
+      var d = CPS.emptyDraft();
+      // El diseño de la carta anterior como punto de partida (se puede cambiar en el paso 1).
+      if (store.list.length) d.design = store.list[store.list.length - 1].design;
+      store.list.push(d);
+      store.active = store.list.length - 1;
+      CPS._writeLetters(store);
+      return store.active;
+    },
+    setActiveLetter: function (i) {
+      var store = CPS._readLetters();
+      if (i >= 0 && i < store.list.length) { store.active = i; CPS._writeLetters(store); }
+    },
+    removeLetter: function (i) {
+      var store = CPS._readLetters();
+      if (i < 0 || i >= store.list.length) return;
+      store.list.splice(i, 1);
+      if (store.active >= store.list.length) store.active = Math.max(0, store.list.length - 1);
+      CPS._writeLetters(store);
+    },
+    // Total de lista de N cartas: la primera a precio normal y las demás a precio de hermanito.
+    lettersTotal: function (cfg, n) {
+      if (!cfg || !n) return 0;
+      var extra = Math.min(cfg.extraPriceCents > 0 ? cfg.extraPriceCents : cfg.priceCents, cfg.priceCents);
+      return cfg.priceCents + extra * (n - 1);
+    },
+
+    // La carta que se está escribiendo (carta.html la usa como antes).
+    loadDraft: function () {
+      var store = CPS._readLetters();
+      return store.list.length ? store.list[store.active] : null;
     },
     saveDraft: function (d) {
-      try { localStorage.setItem(CPS.DRAFT_KEY, JSON.stringify(d)); } catch (e) { /* modo privado: seguimos sin guardar */ }
+      var store = CPS._readLetters();
+      if (!store.list.length) store.list.push(d); else store.list[store.active] = d;
+      CPS._writeLetters(store);
     },
+    // Después de pagar: se borran todas las cartas de este dispositivo.
     clearDraft: function () {
-      try { localStorage.removeItem(CPS.DRAFT_KEY); } catch (e) {}
+      try { localStorage.removeItem(CPS.DRAFT_KEY); localStorage.removeItem(CPS.LETTERS_KEY); } catch (e) {}
     },
 
     designName: function (id) {

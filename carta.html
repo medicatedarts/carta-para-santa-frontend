@@ -98,6 +98,7 @@
   .acciones .btn { min-height: 50px; }
   .ir-vista { display: inline-flex; align-items: center; gap: 6px; font-weight: 800; font-size: 15px; min-height: 44px; }
   @media (min-width: 900px) { .ir-vista { display: none; } }
+  .combo-tag { margin: 0 0 4px; align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; background: var(--pino); color: var(--dorado-claro); border-radius: 999px; padding: 6px 14px; font-weight: 800; font-size: 14px; }
 </style>
 </head>
 <body>
@@ -114,6 +115,8 @@
 
 <main class="wrap gen">
   <section class="panel" aria-live="polite">
+    <!-- Combo de hermanitos: cuál de las cartas de la compra se está escribiendo -->
+    <p class="combo-tag" id="combo-tag" hidden></p>
     <div class="aviso aviso-info" id="cerrado" hidden>El buzón del Polo Norte cerró por este año. Puedes escribir tu carta, pero ya no se puede enviar. ¡Gracias por escribirle a Santa!</div>
 
     <!-- Paso 1 -->
@@ -455,6 +458,15 @@
       b.textContent = 'El buzón del Polo Norte cerró por este año';
     }
   });
+
+  // Combo de hermanitos: si hay más de una carta, se dice cuál se está escribiendo.
+  (function () {
+    var store = CPS.loadLetters();
+    if (store.list.length < 2) return;
+    var tag = $('combo-tag');
+    tag.textContent = '✉️ Carta ' + (store.active + 1) + ' de ' + store.list.length + (store.active > 0 ? ' · hermanito' : '');
+    tag.hidden = false;
+  })();
 
   if (!st.step || st.step < 1 || st.step > 4) st.step = 1;
   updateIdeas();

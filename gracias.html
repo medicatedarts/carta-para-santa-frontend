@@ -105,7 +105,10 @@
 
   // Nunca decimos que la carta salió si el estado no es "mailed" o posterior.
   function paint(o) {
-    $('num').textContent = o.orderNumber ? '#' + o.orderNumber : '—';
+    // Combo de hermanitos: un número de orden por carta.
+    var nums = (o.orderNumbers && o.orderNumbers.length > 1) ? o.orderNumbers : (o.orderNumber ? [o.orderNumber] : []);
+    $('num').textContent = nums.length ? nums.map(function (n) { return '#' + n; }).join(' · ') : '—';
+    if (nums.length > 1 && o.status !== 'pending_payment') $('nota').textContent = 'Enviamos la confirmación al correo del adulto. Cada nene recibe su propio sobre; te avisaremos cuando salga cada carta.';
     var s = o.status;
     if (s === 'pending_payment') {
       mark($('s1'), 'activo'); mark($('s2'), ''); mark($('s3'), '');
