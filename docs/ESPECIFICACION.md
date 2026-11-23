@@ -172,3 +172,12 @@ Prototipo: `docs/prototipo/Confirm.dc.html` (pantalla de móvil 390 × 844; en e
 - [ ] Teclado: todo se puede usar con Tab y Enter.
 - [ ] `prefers-reduced-motion`: nada se anima.
 - [ ] Buzón cerrado: la landing y el generador lo indican y no dejan pagar.
+
+
+## Versión en inglés: ReplyFromSanta.com (desde el 23 nov 2026)
+
+- Las páginas en inglés viven en `en/` (index, carta, enviar, gracias y las tres legales) con `<html lang="en">`. Comparten `css/`, `js/` y `assets/` con la web en español.
+- `js/config.js` y `js/papel.js` leen el idioma de `<html lang>`: textos, diseños, ideas, fechas, moneda (`en-US`) y `?lang=en` en `/api/config`. `CPS.LANG` viaja en `/api/promo` y `/api/checkout`.
+- Los papeles con palabras en español tienen copia `-en.jpg` en `assets/papeles/` (clasica, taller, polonorte); el logo del taller en inglés es `assets/logo-workshop-en.png` y la vista previa al compartir, `assets/og-replyfromsanta.jpg`.
+- Despliegue: un segundo Static Site en Render del mismo repo, con Build Command `bash build-en.sh` y Publish Directory `dist-en`, y el dominio en inglés apuntando a él.
+- Si cambias un texto de una página en español, cambia también su copia en `en/`.

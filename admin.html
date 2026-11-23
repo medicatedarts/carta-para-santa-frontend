@@ -109,6 +109,8 @@
         <form class="ajustes" id="ajustes">
           <label class="campo">Precio (centavos)<input type="number" name="priceCents" min="50" step="1"></label>
           <label class="campo">Carta adicional de hermanito (centavos)<input type="number" name="extraPriceCents" min="50" step="1"></label>
+          <label class="campo">Precio en inglés (centavos)<input type="number" name="priceCentsEn" min="50" step="1"></label>
+          <label class="campo">Hermanito en inglés (centavos)<input type="number" name="extraPriceCentsEn" min="50" step="1"></label>
           <label class="campo">Buzón
             <select name="mailboxOpen"><option value="true">Abierto</option><option value="false">Cerrado</option></select>
           </label>
@@ -230,7 +232,7 @@
       var h = '<table><thead><tr><th>Orden</th><th>Estado</th><th>Para</th><th>Creada</th></tr></thead><tbody>';
       rows.forEach(function (r) {
         h += '<tr class="fila-o' + (r.id === selected ? ' sel' : '') + '" data-id="' + esc(r.id) + '" tabindex="0">' +
-          '<td><strong>' + esc(r.order_number) + '</strong>' + (r.group_size > 1 ? ' <small title="Compra con varias cartas (combo de hermanitos)">· carta ' + (r.letter_index + 1) + ' de ' + r.group_size + '</small>' : '') + '<br><small>' + esc(r.buyer_email || '') + '</small></td>' +
+          '<td><strong>' + esc(r.order_number) + '</strong>' + (r.lang === 'en' ? ' <small title="Pedido en inglés">· EN</small>' : '') + (r.group_size > 1 ? ' <small title="Compra con varias cartas (combo de hermanitos)">· carta ' + (r.letter_index + 1) + ' de ' + r.group_size + '</small>' : '') + '<br><small>' + esc(r.buyer_email || '') + '</small></td>' +
           '<td>' + badge(r.status) + (r.review_reason ? '<br><small>' + esc(r.review_reason) + '</small>' : '') + (r.error ? '<br><small style="color:#7A1610">' + esc(r.error) + '</small>' : '') + '</td>' +
           '<td>' + esc(r.ship_name || r.child_name || '—') + '<br><small>' + esc([r.ship_city, r.ship_state].filter(Boolean).join(', ')) + '</small></td>' +
           '<td><small>' + fecha(r.created_at) + '</small></td></tr>';
@@ -343,6 +345,8 @@
       var f = $('ajustes').elements;
       f.priceCents.value = s.priceCents || '';
       f.extraPriceCents.value = s.extraPriceCents || '';
+      f.priceCentsEn.value = s.priceCentsEn || '';
+      f.extraPriceCentsEn.value = s.extraPriceCentsEn || '';
       f.mailboxOpen.value = String(s.mailboxOpen !== false);
       f.deadlineRecommended.value = s.deadlineRecommended || '';
       f.mailboxCloseDate.value = s.mailboxCloseDate || '';
@@ -353,6 +357,8 @@
     var f = e.target.elements;
     var body = { priceCents: Number(f.priceCents.value), mailboxOpen: f.mailboxOpen.value === 'true' };
     if (f.extraPriceCents.value) body.extraPriceCents = Number(f.extraPriceCents.value);
+    if (f.priceCentsEn.value) body.priceCentsEn = Number(f.priceCentsEn.value);
+    if (f.extraPriceCentsEn.value) body.extraPriceCentsEn = Number(f.extraPriceCentsEn.value);
     if (f.deadlineRecommended.value) body.deadlineRecommended = f.deadlineRecommended.value;
     if (f.mailboxCloseDate.value) body.mailboxCloseDate = f.mailboxCloseDate.value;
     var m = $('ajustes-msg');

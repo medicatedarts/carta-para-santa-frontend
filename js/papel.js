@@ -68,11 +68,11 @@
     var mini = opts && opts.mini;
     var ph = !!c.placeholders;
     var gifts = (c.gifts || []).filter(Boolean);
-    var message = c.message || (ph ? 'Aquí aparecerá tu mensaje para Santa…' : '');
+    var message = c.message || (ph ? CPS.t('Aquí aparecerá tu mensaje para Santa…', 'Your message to Santa will appear here…') : '');
     var signature = c.signature || (ph ? 'Tu nombre' : '');
     var content = mini
       ? { intro: '', message: '', gifts: [], farewell: '' }
-      : { intro: c.intro || '', message: message, gifts: gifts.length ? gifts : (ph ? ['(Tu lista aparecerá aquí)'] : []), farewell: c.farewell || '' };
+      : { intro: c.intro || '', message: message, gifts: gifts.length ? gifts : (ph ? [CPS.t('(Tu lista aparecerá aquí)', '(Your list will appear here)')] : []), farewell: c.farewell || '' };
 
     var fit = fitText(content, d);
     var pt = fit.pt;
@@ -105,12 +105,12 @@
       return '<p style="margin:0;line-height:' + lhPx + 'px;' + (extra || '') + (dim ? 'opacity:.5;' : '') + '">' + txt + '</p>';
     }
 
-    var body = '<div style="position:relative;height:' + (title.rows * lhPx) + 'px"><p style="' + greetStyle + '">' + esc(c.greeting || 'Querido Santa:') + '</p></div>';
+    var body = '<div style="position:relative;height:' + (title.rows * lhPx) + 'px"><p style="' + greetStyle + '">' + esc(c.greeting || CPS.t('Querido Santa:', 'Dear Santa,')) + '</p></div>';
     if (!mini) {
       if (content.intro) body += p(esc(content.intro));
       if (content.message) body += p(esc(content.message), 'white-space:pre-wrap;', ph && !c.message);
       if (content.gifts.length) {
-        body += p('Esta es mi lista de regalos:');
+        body += p(CPS.t('Esta es mi lista de regalos:', 'Here is my wish list:'));
         if (gifts.length) {
           gifts.forEach(function (g, k) { body += p((k + 1) + '.&nbsp;' + esc(g), 'padding-left:0.35in;text-indent:-0.22in;'); });
         } else {
@@ -121,7 +121,8 @@
       if (signature) body += p(esc(signature), 'color:' + d.signColor + ';font-size:' + r3(pt * 1.2) + 'pt;', ph && !c.signature);
     }
 
-    var img = 'assets/papeles/' + d.image.replace('.jpg', mini ? '-mini.jpg' : '.jpg');
+    var base = d.image.replace('.jpg', CPS.LANG === 'en' && CPS.EN_IMAGES.indexOf(c.design) >= 0 ? '-en' : '');
+    var img = 'assets/papeles/' + base + (mini ? '-mini.jpg' : '.jpg');
     return '<div class="pp-page">' +
       '<img class="pp-bg" src="' + img + '" alt="" draggable="false">' + rules +
       '<div class="pp-text" style="left:' + left + 'px;top:' + top + 'px;width:' + width + 'px;height:' + height + 'px;font-size:' + pt + 'pt;color:' + d.ink + '">' + body + '</div>' +

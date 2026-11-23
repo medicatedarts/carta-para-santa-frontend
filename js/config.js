@@ -4,15 +4,30 @@
 
 (function () {
   var local = /^(localhost|127\.0\.0\.1|0\.0\.0\.0)$/.test(location.hostname) || location.protocol === 'file:';
+  // Versión en inglés (ReplyFromSanta): las páginas en inglés llevan <html lang="en">.
+  // Mismo backend; cada orden guarda su idioma y el backend usa el precio de ese idioma.
+  var EN = (document.documentElement.lang || '').slice(0, 2) === 'en';
+  var T = function (es, en) { return EN ? en : es; };
 
   var CPS = {
+    LANG: EN ? 'en' : 'es',
+    t: T,
     BACKEND_URL: local ? 'http://localhost:4000' : 'https://api.cartaparasanta.com',
     CONTACT_EMAIL: 'hola@cartaparasanta.com',
     // Días hábiles entre el pago y la llegada (Lob imprime en 1–2 días y USPS First Class tarda 3–5).
-    DELIVERY_TEXT: '4 a 7 días hábiles',
+    DELIVERY_TEXT: T('4 a 7 días hábiles', '4 to 7 business days'),
     DRAFT_KEY: 'cps_borrador',
 
-    DESIGNS: [
+    DESIGNS: EN ? [
+      { id: 'clasica', name: 'Classic airmail', blurb: 'Red and green stripes, North Pole stamps' },
+      { id: 'taller', name: "Elves' workshop", blurb: 'Wood, garlands and twinkle lights' },
+      { id: 'estrellas', name: 'Starry night', blurb: 'Penguins, cookies and stars' },
+      { id: 'polonorte', name: 'North Pole sky', blurb: 'Hanging ornaments and snow' },
+      { id: 'juguetes', name: 'Watercolor toys', blurb: 'Hand-painted toys' },
+      { id: 'duendes', name: 'Elves and reindeer', blurb: 'Playful elves, reindeer and lights' },
+      { id: 'dulces', name: 'Christmas sweets', blurb: 'Cakes, cookies and candy' },
+      { id: 'cascanueces', name: 'The nutcracker', blurb: 'Toy soldiers, drums and a ballerina' }
+    ] : [
       { id: 'clasica', name: 'Correo aéreo clásico', blurb: 'Rayas rojas y verdes, sellos del Polo Norte' },
       { id: 'taller', name: 'Taller de los duendes', blurb: 'Madera, guirnaldas y lucecitas' },
       { id: 'estrellas', name: 'Noche de estrellas', blurb: 'Pingüinos, galletas y estrellas' },
@@ -22,13 +37,17 @@
       { id: 'dulces', name: 'Dulces navideños', blurb: 'Roscón, galletas y turrones' },
       { id: 'cascanueces', name: 'El cascanueces', blurb: 'Soldaditos, tambores y bailarina' }
     ],
+    // Papeles con palabras en español que tienen copia en inglés (assets/papeles/*-en.jpg).
+    EN_IMAGES: ['clasica', 'taller', 'polonorte'],
 
     LIMITS: { childName: 30, greeting: 40, message: 700, gifts: 12, gift: 60, farewell: 40, signature: 30, ageMin: 1, ageMax: 17 },
 
-    IDEAS: ['Este año me porté muy bien.', 'Ayudé mucho en casa.', 'Aprendí algo nuevo en la escuela.', '¿Cómo están los renos?', 'Te dejaré galletas y leche.'],
+    IDEAS: EN
+      ? ['I was very good this year.', 'I helped a lot at home.', 'I learned something new at school.', 'How are the reindeer?', "I'll leave you cookies and milk."]
+      : ['Este año me porté muy bien.', 'Ayudé mucho en casa.', 'Aprendí algo nuevo en la escuela.', '¿Cómo están los renos?', 'Te dejaré galletas y leche.'],
 
     emptyDraft: function () {
-      return { step: 1, design: 'clasica', childName: '', childAge: '', greeting: 'Querido Santa:', message: '', gifts: [], giftDraft: '', farewell: 'Con mucho cariño,', signature: '' };
+      return { step: 1, design: 'clasica', childName: '', childAge: '', greeting: T('Querido Santa:', 'Dear Santa,'), message: '', gifts: [], giftDraft: '', farewell: T('Con mucho cariño,', 'Love,'), signature: '' };
     },
 
     // Combo de hermanitos: hasta MAX_LETTERS cartas en una compra (la primera a precio normal
@@ -118,6 +137,12 @@
     introLine: function (name, age) {
       name = (name || '').trim();
       age = String(age || '').trim();
+      if (EN) {
+        if (name && age) return 'My name is ' + name + ' and I am ' + age + ' years old.';
+        if (name) return 'My name is ' + name + '.';
+        if (age) return 'I am ' + age + ' years old.';
+        return '';
+      }
       if (name && age) return 'Me llamo ' + name + ' y tengo ' + age + ' años.';
       if (name) return 'Me llamo ' + name + '.';
       if (age) return 'Tengo ' + age + ' años.';
@@ -126,7 +151,7 @@
 
     money: function (cents, currency) {
       try {
-        return new Intl.NumberFormat('es-PR', { style: 'currency', currency: (currency || 'usd').toUpperCase() }).format(cents / 100);
+        return new Intl.NumberFormat(EN ? 'en-US' : 'es-PR', { style: 'currency', currency: (currency || 'usd').toUpperCase() }).format(cents / 100);
       } catch (e) { return '$' + (cents / 100).toFixed(2); }
     },
 
@@ -134,6 +159,10 @@
     longDate: function (iso) {
       var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || '');
       if (!m) return '';
+      if (EN) {
+        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        return months[Number(m[2]) - 1] + ' ' + Number(m[3]);
+      }
       var meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
       return Number(m[3]) + ' de ' + meses[Number(m[2]) - 1];
     },
@@ -141,7 +170,7 @@
     _config: null,
     getConfig: function () {
       if (!CPS._config) {
-        CPS._config = fetch(CPS.BACKEND_URL + '/api/config')
+        CPS._config = fetch(CPS.BACKEND_URL + '/api/config' + (EN ? '?lang=en' : ''))
           .then(function (r) { if (!r.ok) throw new Error('config'); return r.json(); })
           .catch(function () { CPS._config = null; return null; });
       }
