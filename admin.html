@@ -426,6 +426,7 @@
   }
   $('btn-check').addEventListener('click', runCheck);
 
+  renderSite();
   if (token) api('/stats').then(start).catch(logout); else logout();
 })();
 </script>
