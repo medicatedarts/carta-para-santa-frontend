@@ -335,7 +335,7 @@
         b.innerHTML = '<span class="pp-holder" style="display:block"></span><span class="n">' + CPS.esc(d.name) + '</span>';
         b.addEventListener('click', function () { st.design = d.id; save(); markRejilla(); preview(); });
         g.appendChild(b);
-        renderPapel(b.querySelector('.pp-holder'), { design: d.id, greeting: 'Querido Santa:' }, { mini: true });
+        renderPapel(b.querySelector('.pp-holder'), { design: d.id, greeting: 'Dear Santa,' }, { mini: true });
       });
     }
     markRejilla();

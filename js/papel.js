@@ -69,7 +69,7 @@
     var ph = !!c.placeholders;
     var gifts = (c.gifts || []).filter(Boolean);
     var message = c.message || (ph ? CPS.t('Aquí aparecerá tu mensaje para Santa…', 'Your message to Santa will appear here…') : '');
-    var signature = c.signature || (ph ? 'Tu nombre' : '');
+    var signature = c.signature || (ph ? CPS.t('Tu nombre', 'Your name') : '');
     var content = mini
       ? { intro: '', message: '', gifts: [], farewell: '' }
       : { intro: c.intro || '', message: message, gifts: gifts.length ? gifts : (ph ? [CPS.t('(Tu lista aparecerá aquí)', '(Your list will appear here)')] : []), farewell: c.farewell || '' };
