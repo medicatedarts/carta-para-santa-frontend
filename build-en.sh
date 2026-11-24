@@ -8,4 +8,6 @@ rm -rf dist-en
 mkdir -p dist-en
 cp -R css js assets dist-en/
 cp en/*.html dist-en/
+# El panel es el mismo para los dos sitios (mismo backend); en este dominio abre mostrando las órdenes en inglés.
+cp admin.html dist-en/
 echo "dist-en listo: $(ls dist-en/*.html | wc -l) páginas"

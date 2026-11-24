@@ -16,6 +16,10 @@
   h2 { font-size: 18px; color: var(--pino); margin: 0 0 10px; }
   .card { background: #FFFFFF; border: 1px solid #E6DCC6; border-radius: 16px; padding: 18px; }
   .login { max-width: 420px; margin: 60px auto; display: flex; flex-direction: column; gap: 14px; }
+  .sitio { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+  .sitio span { font-size: 13px; font-weight: 800; color: var(--texto-3); margin-right: 4px; }
+  .sitio button { border: 2px solid #E2D6BB; background: #FFFFFF; border-radius: 10px; padding: 0 12px; min-height: 40px; font-weight: 800; font-size: 14px; color: var(--pino); }
+  .sitio button[aria-pressed="true"] { background: var(--rojo); border-color: var(--rojo); color: #FFFFFF; }
   .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
   .tab { border: 2px solid #E2D6BB; background: #FFFFFF; border-radius: 999px; padding: 0 14px; min-height: 40px; font-weight: 800; font-size: 14px; color: var(--pino); }
   .tab[aria-selected="true"] { background: var(--pino); border-color: var(--pino); color: #FFFFFF; }
@@ -65,7 +69,7 @@
 <body>
 <header class="site-header">
   <div class="wrap">
-    <a class="logo" href="index.html"><span>CartaParaSanta<b>.com</b> · Panel</span></a>
+    <a class="logo" href="index.html"><span id="marca">CartaParaSanta<b>.com</b> · Panel</span></a>
     <div class="acc" id="acc" hidden>
       <button class="btn btn-borde" id="btn-recargar" type="button">Recargar</button>
       <button class="btn btn-borde" id="btn-salir" type="button">Salir</button>
@@ -91,6 +95,13 @@
       </div>
       <div id="check"></div>
     </section>
+    <!-- Las dos webs comparten el mismo backend: aquí se escoge de cuál sitio ver órdenes y totales. -->
+    <div class="sitio" role="group" aria-label="Sitio" id="sitio">
+      <span>Sitio:</span>
+      <button type="button" data-lang="">Los dos</button>
+      <button type="button" data-lang="es">CartaParaSanta (español)</button>
+      <button type="button" data-lang="en">ReplyFromSanta (inglés)</button>
+    </div>
     <div class="tabs" role="tablist" id="tabs"></div>
     <div class="cols">
       <section class="card">
@@ -148,6 +159,24 @@
   var LABEL = { pending_payment: 'Sin pagar', paid: 'Pagada', needs_review: 'Revisión', sent_to_lob: 'En Lob', error: 'Error', mailed: 'Enviada', in_transit: 'En tránsito', delivered: 'Entregada', cancelled: 'Cancelada', refunded: 'Reembolsada' };
   var current = 'needs_review';
   var selected = null;
+  // Sitio que se está viendo: '' (los dos), 'es' o 'en'. Por defecto, el del dominio donde se abre el panel.
+  var SITE_KEY = 'cps_admin_sitio';
+  var EN_HOST = /replyfromsanta/i.test(location.hostname);
+  var site = sessionStorage.getItem(SITE_KEY);
+  if (site === null) site = EN_HOST ? 'en' : '';
+  function siteQ(sep) { return site ? sep + 'lang=' + site : ''; }
+  function renderSite() {
+    document.querySelectorAll('#sitio button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.lang === site)); });
+    $('marca').innerHTML = site === 'en' ? 'ReplyFromSanta<b>.com</b> · Panel' : (site === 'es' ? 'CartaParaSanta<b>.com</b> · Panel' : 'CartaParaSanta + ReplyFromSanta · Panel');
+    document.title = (site === 'en' ? 'Panel · ReplyFromSanta.com' : 'Panel · CartaParaSanta.com');
+  }
+  document.querySelectorAll('#sitio button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      site = b.dataset.lang; sessionStorage.setItem(SITE_KEY, site);
+      selected = null; $('detalle').innerHTML = '<p class="vacio">Escoge una orden para ver el detalle.</p>';
+      renderSite(); refresh();
+    });
+  });
   var counts = {};
 
   function api(path, opts) {
@@ -184,12 +213,13 @@
 
   function start() {
     $('login').hidden = true; $('app').hidden = false; $('acc').hidden = false;
+    renderSite();
     loadSettings();
     refresh();
   }
 
   function refresh() {
-    api('/stats').then(function (s) {
+    api('/stats' + siteQ('?')).then(function (s) {
       counts = {};
       s.byStatus.forEach(function (r) { counts[r.status] = r.n; });
       renderTabs();
@@ -223,7 +253,7 @@
   function loadList() {
     var t = TABS.filter(function (x) { return x.id === current; })[0];
     var q = $('q').value.trim();
-    var path = '/orders?limit=200';
+    var path = '/orders?limit=200' + siteQ('&');
     if (q) path += '&q=' + encodeURIComponent(q);
     else if (t.statuses && t.statuses.length === 1) path += '&status=' + t.statuses[0];
     api(path).then(function (rows) {
